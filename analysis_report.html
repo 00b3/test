@@ -1,0 +1,5058 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>🔍 Bot Pattern Analysis</title>
+    <meta charset="UTF-8">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #0f0f23, #1a1a3e); color: #e0e0e0; padding: 20px; min-height: 100vh; }
+        .container { max-width: 1600px; margin: 0 auto; }
+        h1 { color: #00d4ff; text-align: center; margin-bottom: 10px; }
+        h2 { color: #00d4ff; margin: 25px 0 15px 0; font-size: 1.3em; }
+        h3 { color: #ffaa00; margin: 15px 0 10px 0; font-size: 1.1em; }
+        .warning { background: #442200; border: 1px solid #ffaa00; padding: 15px; border-radius: 8px; margin: 20px 0; }
+        .warning-title { color: #ffaa00; font-weight: bold; margin-bottom: 10px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 20px 0; }
+        .stat-card { background: rgba(26,26,46,0.8); padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #2a2a4e; }
+        .stat-label { color: #888; font-size: 11px; text-transform: uppercase; }
+        .stat-value { font-size: 20px; font-weight: bold; margin-top: 5px; }
+        .profit { color: #00ff88; }
+        .loss { color: #ff4444; }
+        .criteria-box { background: rgba(26,26,46,0.8); padding: 20px; border-radius: 10px; margin: 15px 0; border: 1px solid #2a2a4e; }
+        .criteria-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #2a2a4e; }
+        .criteria-label { color: #888; }
+        .criteria-value { font-weight: bold; }
+        .pattern { background: #1a3a1a; border-left: 3px solid #00ff88; padding: 10px 15px; margin: 10px 0; }
+        table { width: 100%; border-collapse: collapse; background: rgba(26,26,46,0.8); border-radius: 10px; overflow: hidden; font-size: 12px; margin: 20px 0; }
+        th { background: #2a2a4e; padding: 10px 6px; text-align: left; color: #00d4ff; font-size: 11px; position: sticky; top: 0; }
+        td { padding: 8px 6px; border-bottom: 1px solid #2a2a4e; }
+        tr:hover { background: rgba(0,212,255,0.1); }
+        .profit-row { border-left: 3px solid #00ff88; }
+        .loss-row { border-left: 3px solid #ff4444; }
+        .ca-cell { font-family: monospace; cursor: pointer; color: #00d4ff; font-size: 11px; }
+        .ca-cell:hover { background: #00d4ff; color: #000; border-radius: 3px; }
+        .toast { position: fixed; bottom: 20px; right: 20px; background: #00ff88; color: #000; padding: 12px 24px; border-radius: 8px; font-weight: bold; opacity: 0; transition: opacity 0.3s; z-index: 1000; }
+        .toast.show { opacity: 1; }
+        .section { margin: 30px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Bot Pattern Analysis</h1>
+        <p style="text-align:center;color:#888;">Generated: 2026-01-05 12:50:20</p>
+        
+        <div class="warning">
+            <div class="warning-title">⚠️ Important Note</div>
+            <p>I messed up. I originally made this to test how good that bot is, so I paper-traded it with 0.1 SOL and ran it. Later, I realized we could get all the data from it, so I edited the script to collect that data. However, I forgot to extract his actual buy and sell amounts, so the 1.5 SOL estimate is just a guess based on what I saw on Solscan (he trades around 1–2 SOL per trade).<strong>The P/L percentages are accurate though!</strong></p>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card"><div class="stat-label">Total Trades</div><div class="stat-value">693</div></div>
+            <div class="stat-card"><div class="stat-label">Completed</div><div class="stat-value">328</div></div>
+            <div class="stat-card"><div class="stat-label">Win Rate</div><div class="stat-value profit">59.5%</div></div>
+            <div class="stat-card"><div class="stat-label">His Est. P/L</div><div class="stat-value profit">$3094.66</div></div>
+            <div class="stat-card"><div class="stat-label">Profitable</div><div class="stat-value profit">195</div></div>
+            <div class="stat-card"><div class="stat-label">Losing</div><div class="stat-value loss">133</div></div>
+            <div class="stat-card"><div class="stat-label">Open</div><div class="stat-value">37</div></div>
+        </div>
+        
+        <div class="section">
+            <h2>🟢 WHY HE BUYS - Entry Criteria</h2>
+            <div class="criteria-box">
+                <h3>Token Age</h3>
+                <div class="criteria-item"><span class="criteria-label">Min</span><span class="criteria-value">26 min</span></div>
+                <div class="criteria-item"><span class="criteria-label">Max</span><span class="criteria-value">72043 min</span></div>
+                <div class="criteria-item"><span class="criteria-label">Average</span><span class="criteria-value">6500 min</span></div>
+                <div class="pattern">🎯 MOMENTUM TRADER - buys established tokens</div>
+                
+                <h3>Market Cap</h3>
+                <div class="criteria-item"><span class="criteria-label">Min</span><span class="criteria-value">$3,139</span></div>
+                <div class="criteria-item"><span class="criteria-label">Max</span><span class="criteria-value">$1,920,006</span></div>
+                <div class="criteria-item"><span class="criteria-label">Average</span><span class="criteria-value">$104,937</span></div>
+                <div class="pattern">🎯 LOW/MID CAP TRADER</div>
+                
+                <h3>Price Momentum at Entry</h3>
+                <div class="criteria-item"><span class="criteria-label">1m avg</span><span class="criteria-value">-1.1%</span></div>
+                <div class="criteria-item"><span class="criteria-label">5m avg</span><span class="criteria-value">+1.2%</span></div>
+                <div class="criteria-item"><span class="criteria-label">1h avg</span><span class="criteria-value">+14.6%</span></div>
+                
+                <h3>Security</h3>
+                <div class="criteria-item"><span class="criteria-label">No Freeze</span><span class="criteria-value">100%</span></div>
+                <div class="criteria-item"><span class="criteria-label">No Mint</span><span class="criteria-value">100%</span></div>
+                <div class="criteria-item"><span class="criteria-label">LP Burn avg</span><span class="criteria-value">100%</span></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>🔴 WHY HE SELLS - Exit Criteria</h2>
+            <div class="criteria-box">
+                <h3>Hold Time</h3>
+                <div class="criteria-item"><span class="criteria-label">Min</span><span class="criteria-value">2.3 min</span></div>
+                <div class="criteria-item"><span class="criteria-label">Max</span><span class="criteria-value">562.4 min</span></div>
+                <div class="criteria-item"><span class="criteria-label">Average</span><span class="criteria-value">144.7 min</span></div>
+                <div class="pattern">🎯 SWING TRADER - holds 30+ min</div>
+                
+                <h3>Exit Timing</h3>
+                <div class="criteria-item"><span class="criteria-label">MC Change avg</span><span class="criteria-value">+17.2%</span></div>
+                <div class="criteria-item"><span class="criteria-label">1m at sell</span><span class="criteria-value">-0.5%</span></div>
+                <div class="criteria-item"><span class="criteria-label">5m at sell</span><span class="criteria-value">+1.7%</span></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>📋 All Trades (Click CA to Copy)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>CA</th>
+                        <th>Buy Time</th>
+                        <th>Sell Time</th>
+                        <th>Hold</th>
+                        <th>Buy MC</th>
+                        <th>Sell MC</th>
+                        <th>MC Δ</th>
+                        <th>Age</th>
+                        <th>Holders</th>
+                        <th>His P/L</th>
+                        <th>P/L %</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+        <tr class="profit-row">
+            <td>Mia</td>
+            <td class="ca-cell" onclick="copyCA('FyPDfX92B4uEk4zZouy96d1Kk1LgnCznBpzAFSsZpump')">FyPDfX...pump</td>
+            <td>01/05 01:20</td>
+            <td>01/05 01:36</td>
+            <td>17m</td>
+            <td>$83,156</td>
+            <td>$358,339</td>
+            <td class="profit">+331%</td>
+            <td>731m</td>
+            <td>390</td>
+            <td class="profit">$642.49</td>
+            <td class="profit">317.3%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>meme</td>
+            <td class="ca-cell" onclick="copyCA('85ymfLLfeyYA9wV1PorpLBW1pprWfPgnm3cMEx5ppump')">85ymfL...pump</td>
+            <td>01/04 23:46</td>
+            <td>01/05 01:58</td>
+            <td>133m</td>
+            <td>$317,041</td>
+            <td>$709,910</td>
+            <td class="profit">+124%</td>
+            <td>1155m</td>
+            <td>1492</td>
+            <td class="profit">$242.24</td>
+            <td class="profit">119.6%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>GoldenWhale</td>
+            <td class="ca-cell" onclick="copyCA('DkETzNyP4oST2NMU4mmnZwxerh3EESaxtfczk3n3pump')">DkETzN...pump</td>
+            <td>01/05 05:58</td>
+            <td>01/05 06:31</td>
+            <td>33m</td>
+            <td>$16,489</td>
+            <td>$31,734</td>
+            <td class="profit">+92%</td>
+            <td>4619m</td>
+            <td>778</td>
+            <td class="profit">$202.14</td>
+            <td class="profit">99.8%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>you</td>
+            <td class="ca-cell" onclick="copyCA('BvkPHKx2QKMbWgo1gT2R9FemF1BvYhv2ufcmeMydrciu')">BvkPHK...rciu</td>
+            <td>01/05 02:18</td>
+            <td>01/05 02:51</td>
+            <td>33m</td>
+            <td>$46,056</td>
+            <td>$77,690</td>
+            <td class="profit">+69%</td>
+            <td>9964m</td>
+            <td>460</td>
+            <td class="profit">$160.26</td>
+            <td class="profit">79.1%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Mia</td>
+            <td class="ca-cell" onclick="copyCA('FyPDfX92B4uEk4zZouy96d1Kk1LgnCznBpzAFSsZpump')">FyPDfX...pump</td>
+            <td>01/05 06:26</td>
+            <td>01/05 07:37</td>
+            <td>71m</td>
+            <td>$194,860</td>
+            <td>$314,555</td>
+            <td class="profit">+61%</td>
+            <td>1038m</td>
+            <td>1062</td>
+            <td class="profit">$133.60</td>
+            <td class="profit">66.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>CALM </td>
+            <td class="ca-cell" onclick="copyCA('6xDiFWhuc4TBS86gJKWpFYfRSftguYWPWQBgrX3ipump')">6xDiFW...pump</td>
+            <td>01/05 04:14</td>
+            <td>01/05 04:33</td>
+            <td>19m</td>
+            <td>$20,080</td>
+            <td>$29,770</td>
+            <td class="profit">+48%</td>
+            <td>294m</td>
+            <td>204</td>
+            <td class="profit">$124.10</td>
+            <td class="profit">61.3%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>GRANNY</td>
+            <td class="ca-cell" onclick="copyCA('8s4Cziwa2EdeZP5ySHCSkSmsLJaGfD2U1SpxVoC4pump')">8s4Czi...pump</td>
+            <td>01/05 08:03</td>
+            <td>01/05 08:15</td>
+            <td>12m</td>
+            <td>$18,652</td>
+            <td>$25,025</td>
+            <td class="profit">+34%</td>
+            <td>5178m</td>
+            <td>111</td>
+            <td class="profit">$107.65</td>
+            <td class="profit">53.2%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>GleGle</td>
+            <td class="ca-cell" onclick="copyCA('C5qsCUv2wFUiX3HddbQYG81jSUShXBygngJQJ1y9pump')">C5qsCU...pump</td>
+            <td>01/05 04:18</td>
+            <td>01/05 06:03</td>
+            <td>105m</td>
+            <td>$23,876</td>
+            <td>$35,538</td>
+            <td class="profit">+49%</td>
+            <td>885m</td>
+            <td>280</td>
+            <td class="profit">$103.26</td>
+            <td class="profit">51.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>CALM </td>
+            <td class="ca-cell" onclick="copyCA('6xDiFWhuc4TBS86gJKWpFYfRSftguYWPWQBgrX3ipump')">6xDiFW...pump</td>
+            <td>01/05 02:37</td>
+            <td>01/05 02:41</td>
+            <td>5m</td>
+            <td>$24,283</td>
+            <td>$33,140</td>
+            <td class="profit">+36%</td>
+            <td>197m</td>
+            <td>240</td>
+            <td class="profit">$102.51</td>
+            <td class="profit">50.6%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>GRANNY</td>
+            <td class="ca-cell" onclick="copyCA('4zL98Nncs8mHn3Aaw8naCdusLbRStKoxcfHqA4Wwpump')">4zL98N...pump</td>
+            <td>01/05 02:52</td>
+            <td>01/05 03:47</td>
+            <td>55m</td>
+            <td>N/A</td>
+            <td>$19,281</td>
+            <td class="loss">+0%</td>
+            <td>0m</td>
+            <td>0</td>
+            <td class="profit">$96.87</td>
+            <td class="profit">47.8%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>TRAX </td>
+            <td class="ca-cell" onclick="copyCA('Dk2pDpyS1H6S5TCv3Afx8bmxJb1XbsWBJbReXtjipump')">Dk2pDp...pump</td>
+            <td>01/05 06:37</td>
+            <td>01/05 07:33</td>
+            <td>57m</td>
+            <td>$93,553</td>
+            <td>$133,072</td>
+            <td class="profit">+42%</td>
+            <td>2906m</td>
+            <td>867</td>
+            <td class="profit">$93.29</td>
+            <td class="profit">46.1%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>k8o5</td>
+            <td class="ca-cell" onclick="copyCA('3FkfFXtMDVkKJ6SAouMSK4qYFmErYxSnAUx6vP52pump')">3FkfFX...pump</td>
+            <td>01/05 05:15</td>
+            <td>01/05 05:53</td>
+            <td>38m</td>
+            <td>$33,133</td>
+            <td>$46,187</td>
+            <td class="profit">+39%</td>
+            <td>1976m</td>
+            <td>241</td>
+            <td class="profit">$93.03</td>
+            <td class="profit">45.9%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>glegle</td>
+            <td class="ca-cell" onclick="copyCA('D12fZ1v9WK3VhpLGejb99GT6MzwPjGWLhjN8upQmpump')">D12fZ1...pump</td>
+            <td>01/05 06:34</td>
+            <td>01/05 06:39</td>
+            <td>5m</td>
+            <td>$56,459</td>
+            <td>$78,867</td>
+            <td class="profit">+40%</td>
+            <td>171m</td>
+            <td>839</td>
+            <td class="profit">$90.13</td>
+            <td class="profit">44.5%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Few</td>
+            <td class="ca-cell" onclick="copyCA('EH3taj1hfXdRPt1bFZ7MinfvTo31i8tLcyp4biNEpump')">EH3taj...pump</td>
+            <td>01/05 05:30</td>
+            <td>01/05 05:35</td>
+            <td>5m</td>
+            <td>$5,950</td>
+            <td>$8,152</td>
+            <td class="profit">+37%</td>
+            <td>147m</td>
+            <td>229</td>
+            <td class="profit">$86.16</td>
+            <td class="profit">42.5%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Mia</td>
+            <td class="ca-cell" onclick="copyCA('DhHFXFYWiRHV3yZHGUsEd3GPqLmwUCjAwX1mVAubpump')">DhHFXF...pump</td>
+            <td>01/05 06:29</td>
+            <td>01/05 06:38</td>
+            <td>9m</td>
+            <td>$13,114</td>
+            <td>$17,967</td>
+            <td class="profit">+37%</td>
+            <td>233m</td>
+            <td>177</td>
+            <td class="profit">$85.83</td>
+            <td class="profit">42.4%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>GPM</td>
+            <td class="ca-cell" onclick="copyCA('CQSs5ttJPeRxawNpoiTD5sDGRkhbK36WBLo3JuKwpump')">CQSs5t...pump</td>
+            <td>01/05 01:01</td>
+            <td>01/05 01:08</td>
+            <td>7m</td>
+            <td>$59,459</td>
+            <td>$81,853</td>
+            <td class="profit">+38%</td>
+            <td>26m</td>
+            <td>395</td>
+            <td class="profit">$83.63</td>
+            <td class="profit">41.3%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>BOMP(p)</td>
+            <td class="ca-cell" onclick="copyCA('CfJxopGjVVPWsbaDM8izGbi3gL5U2C4tDYxeX32dpump')">CfJxop...pump</td>
+            <td>01/05 03:32</td>
+            <td>01/05 08:47</td>
+            <td>315m</td>
+            <td>$196,317</td>
+            <td>$309,688</td>
+            <td class="profit">+58%</td>
+            <td>653m</td>
+            <td>1483</td>
+            <td class="profit">$165.75</td>
+            <td class="profit">40.9%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>WYNN</td>
+            <td class="ca-cell" onclick="copyCA('E9uUgGXJ77AVmaqVhN544oz644VUPBGU6r4qUaeppump')">E9uUgG...pump</td>
+            <td>01/05 05:39</td>
+            <td>01/05 06:53</td>
+            <td>73m</td>
+            <td>$918,828</td>
+            <td>$1,243,633</td>
+            <td class="profit">+35%</td>
+            <td>9230m</td>
+            <td>1870</td>
+            <td class="profit">$77.13</td>
+            <td class="profit">38.1%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>WhiteHorse</td>
+            <td class="ca-cell" onclick="copyCA('3KDkph5Q9Cm3YUTmm39NgEDgX9jrRCHqkyNT2kMEpump')">3KDkph...pump</td>
+            <td>01/04 23:41</td>
+            <td>01/05 01:07</td>
+            <td>85m</td>
+            <td>$38,447</td>
+            <td>$51,056</td>
+            <td class="profit">+33%</td>
+            <td>13876m</td>
+            <td>428</td>
+            <td class="profit">$75.74</td>
+            <td class="profit">37.4%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Few</td>
+            <td class="ca-cell" onclick="copyCA('EH3taj1hfXdRPt1bFZ7MinfvTo31i8tLcyp4biNEpump')">EH3taj...pump</td>
+            <td>01/05 05:18</td>
+            <td>01/05 05:20</td>
+            <td>2m</td>
+            <td>$34,369</td>
+            <td>$49,865</td>
+            <td class="profit">+45%</td>
+            <td>135m</td>
+            <td>280</td>
+            <td class="profit">$75.40</td>
+            <td class="profit">37.2%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Fido</td>
+            <td class="ca-cell" onclick="copyCA('CtZDuSwo7pHpKvoQnNj93azxAH9F3SbcBsVqNrZhpump')">CtZDuS...pump</td>
+            <td>01/05 03:58</td>
+            <td>01/05 04:01</td>
+            <td>2m</td>
+            <td>$5,941</td>
+            <td>$7,906</td>
+            <td class="profit">+33%</td>
+            <td>4760m</td>
+            <td>146</td>
+            <td class="profit">$74.59</td>
+            <td class="profit">36.8%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>GREAT</td>
+            <td class="ca-cell" onclick="copyCA('4fBTvktD3uBp74sGQQB2WFjRnSfayHbWDfPoxjWEpump')">4fBTvk...pump</td>
+            <td>01/05 04:50</td>
+            <td>01/05 05:33</td>
+            <td>43m</td>
+            <td>$103,084</td>
+            <td>$29,096</td>
+            <td class="loss">-72%</td>
+            <td>54m</td>
+            <td>886</td>
+            <td class="profit">$74.54</td>
+            <td class="profit">36.8%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Mia</td>
+            <td class="ca-cell" onclick="copyCA('FyPDfX92B4uEk4zZouy96d1Kk1LgnCznBpzAFSsZpump')">FyPDfX...pump</td>
+            <td>01/05 01:10</td>
+            <td>01/05 01:15</td>
+            <td>5m</td>
+            <td>$31,635</td>
+            <td>$45,239</td>
+            <td class="profit">+43%</td>
+            <td>721m</td>
+            <td>382</td>
+            <td class="profit">$72.73</td>
+            <td class="profit">35.9%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>GREAT</td>
+            <td class="ca-cell" onclick="copyCA('4fBTvktD3uBp74sGQQB2WFjRnSfayHbWDfPoxjWEpump')">4fBTvk...pump</td>
+            <td>01/05 05:26</td>
+            <td>01/05 06:16</td>
+            <td>50m</td>
+            <td>$22,804</td>
+            <td>$66,894</td>
+            <td class="profit">+193%</td>
+            <td>90m</td>
+            <td>607</td>
+            <td class="profit">$72.54</td>
+            <td class="profit">35.8%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>SATOSHI</td>
+            <td class="ca-cell" onclick="copyCA('Edzw1KGP22SVfP9seSEiXgtgFSbECLemorE2iABtpump')">Edzw1K...pump</td>
+            <td>01/05 02:19</td>
+            <td>01/05 02:35</td>
+            <td>17m</td>
+            <td>$14,585</td>
+            <td>$11,755</td>
+            <td class="loss">-19%</td>
+            <td>663m</td>
+            <td>280</td>
+            <td class="profit">$141.03</td>
+            <td class="profit">34.8%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>gm</td>
+            <td class="ca-cell" onclick="copyCA('9RaBDMwL2hcmah5yzXjBLiiYxHiBbd2jSEH3q6KCpump')">9RaBDM...pump</td>
+            <td>01/05 02:02</td>
+            <td>01/05 02:14</td>
+            <td>12m</td>
+            <td>$1,302,407</td>
+            <td>$1,894,706</td>
+            <td class="profit">+45%</td>
+            <td>14351m</td>
+            <td>430</td>
+            <td class="profit">$68.89</td>
+            <td class="profit">34.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Void</td>
+            <td class="ca-cell" onclick="copyCA('9hSaLB4a674pns3uJCYRu4u5Bbvi4UwBcrS9AKnFpump')">9hSaLB...pump</td>
+            <td>01/05 00:15</td>
+            <td>01/05 01:45</td>
+            <td>90m</td>
+            <td>$106,836</td>
+            <td>$140,184</td>
+            <td class="profit">+31%</td>
+            <td>5137m</td>
+            <td>681</td>
+            <td class="profit">$68.47</td>
+            <td class="profit">33.8%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>CALM </td>
+            <td class="ca-cell" onclick="copyCA('6xDiFWhuc4TBS86gJKWpFYfRSftguYWPWQBgrX3ipump')">6xDiFW...pump</td>
+            <td>01/05 05:37</td>
+            <td>01/05 06:41</td>
+            <td>64m</td>
+            <td>$16,893</td>
+            <td>$21,830</td>
+            <td class="profit">+29%</td>
+            <td>377m</td>
+            <td>200</td>
+            <td class="profit">$67.41</td>
+            <td class="profit">33.3%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>TGOTCHI</td>
+            <td class="ca-cell" onclick="copyCA('B29jeK32ktUUWUqJbEjH9ghed4yUQoqGWCiwkbr5pump')">B29jeK...pump</td>
+            <td>01/05 07:56</td>
+            <td>01/05 08:03</td>
+            <td>7m</td>
+            <td>$75,695</td>
+            <td>$107,275</td>
+            <td class="profit">+42%</td>
+            <td>33m</td>
+            <td>900</td>
+            <td class="profit">$67.07</td>
+            <td class="profit">33.1%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>FOID</td>
+            <td class="ca-cell" onclick="copyCA('HEjKJoVSk6552wirqJW9yz9fnvbSfKuF64aDKNoWpump')">HEjKJo...pump</td>
+            <td>01/05 03:54</td>
+            <td>01/05 04:10</td>
+            <td>17m</td>
+            <td>$11,860</td>
+            <td>$15,180</td>
+            <td class="profit">+28%</td>
+            <td>226m</td>
+            <td>235</td>
+            <td class="profit">$66.85</td>
+            <td class="profit">33.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>TRAX </td>
+            <td class="ca-cell" onclick="copyCA('Dk2pDpyS1H6S5TCv3Afx8bmxJb1XbsWBJbReXtjipump')">Dk2pDp...pump</td>
+            <td>01/05 00:24</td>
+            <td>01/05 01:09</td>
+            <td>45m</td>
+            <td>$89,303</td>
+            <td>$118,054</td>
+            <td class="profit">+32%</td>
+            <td>2534m</td>
+            <td>919</td>
+            <td class="profit">$66.21</td>
+            <td class="profit">32.7%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>DUVE</td>
+            <td class="ca-cell" onclick="copyCA('A9fdu9Nc1ipWD9qLFswQA2NQsy7EWK9vTwN3rjtbpump')">A9fdu9...pump</td>
+            <td>01/05 06:11</td>
+            <td>01/05 06:27</td>
+            <td>17m</td>
+            <td>$17,443</td>
+            <td>$22,208</td>
+            <td class="profit">+27%</td>
+            <td>11106m</td>
+            <td>275</td>
+            <td class="profit">$62.84</td>
+            <td class="profit">31.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>FYC</td>
+            <td class="ca-cell" onclick="copyCA('EnPANkfatLeou1A7785qYREghWiGx6Xxh4TJnn43pump')">EnPANk...pump</td>
+            <td>01/05 03:14</td>
+            <td>01/05 03:21</td>
+            <td>7m</td>
+            <td>$11,172</td>
+            <td>$13,884</td>
+            <td class="profit">+24%</td>
+            <td>530m</td>
+            <td>258</td>
+            <td class="profit">$62.44</td>
+            <td class="profit">30.8%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>GRANNY</td>
+            <td class="ca-cell" onclick="copyCA('4zL98Nncs8mHn3Aaw8naCdusLbRStKoxcfHqA4Wwpump')">4zL98N...pump</td>
+            <td>01/05 01:26</td>
+            <td>01/05 01:43</td>
+            <td>17m</td>
+            <td>$11,478</td>
+            <td>$14,835</td>
+            <td class="profit">+29%</td>
+            <td>4289m</td>
+            <td>193</td>
+            <td class="profit">$61.07</td>
+            <td class="profit">30.2%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>MOON</td>
+            <td class="ca-cell" onclick="copyCA('DZ1fC3aiobpYEe621jaCHX4Dr83n4Pv44fiikZY2pump')">DZ1fC3...pump</td>
+            <td>01/05 04:45</td>
+            <td>01/05 04:54</td>
+            <td>9m</td>
+            <td>$95,150</td>
+            <td>$114,689</td>
+            <td class="profit">+21%</td>
+            <td>247m</td>
+            <td>359</td>
+            <td class="profit">$60.10</td>
+            <td class="profit">29.7%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>json</td>
+            <td class="ca-cell" onclick="copyCA('DP97WVT3RaQBZS2nYfnq99agzqP3czkS8MxEk4gFpump')">DP97WV...pump</td>
+            <td>01/05 04:42</td>
+            <td>01/05 05:22</td>
+            <td>40m</td>
+            <td>$121,107</td>
+            <td>$77,752</td>
+            <td class="loss">-36%</td>
+            <td>266m</td>
+            <td>620</td>
+            <td class="profit">$54.72</td>
+            <td class="profit">27.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>gm</td>
+            <td class="ca-cell" onclick="copyCA('9RaBDMwL2hcmah5yzXjBLiiYxHiBbd2jSEH3q6KCpump')">9RaBDM...pump</td>
+            <td>01/05 08:55</td>
+            <td>01/05 09:24</td>
+            <td>29m</td>
+            <td>N/A</td>
+            <td>$751,283</td>
+            <td class="loss">+0%</td>
+            <td>0m</td>
+            <td>0</td>
+            <td class="profit">$52.73</td>
+            <td class="profit">26.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>meme</td>
+            <td class="ca-cell" onclick="copyCA('3mRdAwMrgikR5Qnn2TLwjfZzcNfBA2tvv2nv4GhDpump')">3mRdAw...pump</td>
+            <td>01/05 00:10</td>
+            <td>01/05 00:21</td>
+            <td>12m</td>
+            <td>$28,377</td>
+            <td>$33,637</td>
+            <td class="profit">+19%</td>
+            <td>1056m</td>
+            <td>382</td>
+            <td class="profit">$51.98</td>
+            <td class="profit">25.7%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Mia</td>
+            <td class="ca-cell" onclick="copyCA('FyPDfX92B4uEk4zZouy96d1Kk1LgnCznBpzAFSsZpump')">FyPDfX...pump</td>
+            <td>01/05 01:03</td>
+            <td>01/05 01:08</td>
+            <td>5m</td>
+            <td>$33,566</td>
+            <td>$40,781</td>
+            <td class="profit">+21%</td>
+            <td>714m</td>
+            <td>366</td>
+            <td class="profit">$51.90</td>
+            <td class="profit">25.6%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>NFA</td>
+            <td class="ca-cell" onclick="copyCA('AqDLQxzWdugyed5MNEcnM3XGcFVjxxxaaRK7aa7dpump')">AqDLQx...pump</td>
+            <td>01/05 06:29</td>
+            <td>01/05 06:36</td>
+            <td>7m</td>
+            <td>$24,987</td>
+            <td>$36,682</td>
+            <td class="profit">+47%</td>
+            <td>26m</td>
+            <td>411</td>
+            <td class="profit">$51.39</td>
+            <td class="profit">25.4%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>GleGle</td>
+            <td class="ca-cell" onclick="copyCA('C5qsCUv2wFUiX3HddbQYG81jSUShXBygngJQJ1y9pump')">C5qsCU...pump</td>
+            <td>01/05 07:52</td>
+            <td>01/05 08:01</td>
+            <td>9m</td>
+            <td>$73,436</td>
+            <td>$91,492</td>
+            <td class="profit">+25%</td>
+            <td>1099m</td>
+            <td>501</td>
+            <td class="profit">$51.01</td>
+            <td class="profit">25.2%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Miao</td>
+            <td class="ca-cell" onclick="copyCA('j8b2HCin25oKLjttFevHBU7EdqkeXZgPkpUV6fYpump')">j8b2HC...pump</td>
+            <td>01/05 01:25</td>
+            <td>01/05 01:32</td>
+            <td>7m</td>
+            <td>$16,012</td>
+            <td>$19,598</td>
+            <td class="profit">+22%</td>
+            <td>738m</td>
+            <td>583</td>
+            <td class="profit">$50.82</td>
+            <td class="profit">25.1%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Few</td>
+            <td class="ca-cell" onclick="copyCA('EH3taj1hfXdRPt1bFZ7MinfvTo31i8tLcyp4biNEpump')">EH3taj...pump</td>
+            <td>01/05 05:25</td>
+            <td>01/05 05:27</td>
+            <td>2m</td>
+            <td>$26,961</td>
+            <td>$33,043</td>
+            <td class="profit">+23%</td>
+            <td>142m</td>
+            <td>275</td>
+            <td class="profit">$50.67</td>
+            <td class="profit">25.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>INDIVIDUAL</td>
+            <td class="ca-cell" onclick="copyCA('8yqXSNEThU9SUfpygwSssdHx1kcYPexDusnsRi4zpump')">8yqXSN...pump</td>
+            <td>01/05 04:49</td>
+            <td>01/05 07:02</td>
+            <td>133m</td>
+            <td>N/A</td>
+            <td>$24,443</td>
+            <td class="loss">+0%</td>
+            <td>0m</td>
+            <td>0</td>
+            <td class="profit">$50.18</td>
+            <td class="profit">24.8%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>BOWL</td>
+            <td class="ca-cell" onclick="copyCA('86PtAo1z8th9tgv1BhgLiyuE91tWokUXhBCc5aLGpump')">86PtAo...pump</td>
+            <td>01/05 05:20</td>
+            <td>01/05 05:29</td>
+            <td>10m</td>
+            <td>$23,388</td>
+            <td>$27,692</td>
+            <td class="profit">+18%</td>
+            <td>257m</td>
+            <td>307</td>
+            <td class="profit">$49.35</td>
+            <td class="profit">24.4%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>GleGle</td>
+            <td class="ca-cell" onclick="copyCA('C5qsCUv2wFUiX3HddbQYG81jSUShXBygngJQJ1y9pump')">C5qsCU...pump</td>
+            <td>01/05 03:54</td>
+            <td>01/05 04:13</td>
+            <td>19m</td>
+            <td>$20,356</td>
+            <td>$24,416</td>
+            <td class="profit">+20%</td>
+            <td>862m</td>
+            <td>282</td>
+            <td class="profit">$47.67</td>
+            <td class="profit">23.5%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Fido</td>
+            <td class="ca-cell" onclick="copyCA('CtZDuSwo7pHpKvoQnNj93azxAH9F3SbcBsVqNrZhpump')">CtZDuS...pump</td>
+            <td>01/05 04:20</td>
+            <td>01/05 04:34</td>
+            <td>14m</td>
+            <td>$11,830</td>
+            <td>$15,199</td>
+            <td class="profit">+28%</td>
+            <td>4781m</td>
+            <td>172</td>
+            <td class="profit">$46.79</td>
+            <td class="profit">23.1%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>ORCA</td>
+            <td class="ca-cell" onclick="copyCA('JEHoVK5wnC9MVnHso7r5H6DKr4nWvbXgp7iAp2ajpump')">JEHoVK...pump</td>
+            <td>01/05 05:43</td>
+            <td>01/05 06:28</td>
+            <td>45m</td>
+            <td>$6,151</td>
+            <td>$6,943</td>
+            <td class="profit">+13%</td>
+            <td>11759m</td>
+            <td>257</td>
+            <td class="profit">$46.78</td>
+            <td class="profit">23.1%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>TRAX </td>
+            <td class="ca-cell" onclick="copyCA('Dk2pDpyS1H6S5TCv3Afx8bmxJb1XbsWBJbReXtjipump')">Dk2pDp...pump</td>
+            <td>01/05 04:35</td>
+            <td>01/05 05:28</td>
+            <td>52m</td>
+            <td>$89,714</td>
+            <td>$108,120</td>
+            <td class="profit">+21%</td>
+            <td>2785m</td>
+            <td>881</td>
+            <td class="profit">$46.63</td>
+            <td class="profit">23.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Opinion</td>
+            <td class="ca-cell" onclick="copyCA('f85m3YXHER29D7jRKgCa6bwhbhvwq2bJ2f91QXJpump')">f85m3Y...pump</td>
+            <td>01/05 03:20</td>
+            <td>01/05 03:32</td>
+            <td>12m</td>
+            <td>$53,680</td>
+            <td>N/A</td>
+            <td class="loss">+0%</td>
+            <td>3984m</td>
+            <td>364</td>
+            <td class="profit">$46.47</td>
+            <td class="profit">22.9%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>HAMM</td>
+            <td class="ca-cell" onclick="copyCA('8uCdddfxYNqxYPQGEzqrSmpKkVyMHnKvFTahp4Yopump')">8uCddd...pump</td>
+            <td>01/05 05:31</td>
+            <td>01/05 07:01</td>
+            <td>90m</td>
+            <td>$99,917</td>
+            <td>$119,931</td>
+            <td class="profit">+20%</td>
+            <td>47538m</td>
+            <td>495</td>
+            <td class="profit">$45.76</td>
+            <td class="profit">22.6%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Neurosama</td>
+            <td class="ca-cell" onclick="copyCA('5FK2bfAmNDtEG57GgmbodU99XPX47HrmuvT5x3LDpump')">5FK2bf...pump</td>
+            <td>01/05 07:19</td>
+            <td>01/05 07:31</td>
+            <td>12m</td>
+            <td>$1,213,176</td>
+            <td>$1,400,772</td>
+            <td class="profit">+15%</td>
+            <td>16862m</td>
+            <td>2121</td>
+            <td class="profit">$45.30</td>
+            <td class="profit">22.4%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>FRANKLIN</td>
+            <td class="ca-cell" onclick="copyCA('aoGsywnF9SfW8ZqNoPgpVCxEndwrf5zm5h2LCWkpump')">aoGsyw...pump</td>
+            <td>01/05 06:56</td>
+            <td>01/05 09:09</td>
+            <td>133m</td>
+            <td>$13,410</td>
+            <td>$15,948</td>
+            <td class="profit">+19%</td>
+            <td>8028m</td>
+            <td>106</td>
+            <td class="profit">$45.05</td>
+            <td class="profit">22.2%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>BOWL</td>
+            <td class="ca-cell" onclick="copyCA('GGjSyw7a11ZXvVTt163NYUv3HMfv5iscgY8Z3Wyhpump')">GGjSyw...pump</td>
+            <td>01/05 02:04</td>
+            <td>01/05 02:09</td>
+            <td>5m</td>
+            <td>$25,364</td>
+            <td>$27,303</td>
+            <td class="profit">+8%</td>
+            <td>95m</td>
+            <td>339</td>
+            <td class="profit">$44.70</td>
+            <td class="profit">22.1%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>交易猫</td>
+            <td class="ca-cell" onclick="copyCA('Gysp4iZ6uNuAksAPR37fQwLDRFU9Rz255UjExhiwpump')">Gysp4i...pump</td>
+            <td>01/05 07:36</td>
+            <td>01/05 07:45</td>
+            <td>10m</td>
+            <td>$132,088</td>
+            <td>$156,926</td>
+            <td class="profit">+19%</td>
+            <td>1257m</td>
+            <td>1439</td>
+            <td class="profit">$44.20</td>
+            <td class="profit">21.8%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>FYC</td>
+            <td class="ca-cell" onclick="copyCA('EnPANkfatLeou1A7785qYREghWiGx6Xxh4TJnn43pump')">EnPANk...pump</td>
+            <td>01/05 01:32</td>
+            <td>01/05 01:39</td>
+            <td>7m</td>
+            <td>$18,016</td>
+            <td>$21,563</td>
+            <td class="profit">+20%</td>
+            <td>428m</td>
+            <td>320</td>
+            <td class="profit">$43.90</td>
+            <td class="profit">21.7%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>gm</td>
+            <td class="ca-cell" onclick="copyCA('9RaBDMwL2hcmah5yzXjBLiiYxHiBbd2jSEH3q6KCpump')">9RaBDM...pump</td>
+            <td>01/05 05:41</td>
+            <td>01/05 06:21</td>
+            <td>40m</td>
+            <td>$902,857</td>
+            <td>$1,115,286</td>
+            <td class="profit">+24%</td>
+            <td>14569m</td>
+            <td>800</td>
+            <td class="profit">$43.30</td>
+            <td class="profit">21.4%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>BOWL</td>
+            <td class="ca-cell" onclick="copyCA('GGjSyw7a11ZXvVTt163NYUv3HMfv5iscgY8Z3Wyhpump')">GGjSyw...pump</td>
+            <td>01/05 01:47</td>
+            <td>01/05 01:52</td>
+            <td>5m</td>
+            <td>$22,065</td>
+            <td>$26,074</td>
+            <td class="profit">+18%</td>
+            <td>78m</td>
+            <td>345</td>
+            <td class="profit">$43.17</td>
+            <td class="profit">21.3%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>LAUNCHLAB</td>
+            <td class="ca-cell" onclick="copyCA('5wT9K2qfSGgfU8piHA5an51YBE5wZUNzczH3ipyYpump')">5wT9K2...pump</td>
+            <td>01/05 00:06</td>
+            <td>01/05 00:41</td>
+            <td>35m</td>
+            <td>N/A</td>
+            <td>$175,813</td>
+            <td class="loss">+0%</td>
+            <td>0m</td>
+            <td>0</td>
+            <td class="profit">$42.36</td>
+            <td class="profit">20.9%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>glegle</td>
+            <td class="ca-cell" onclick="copyCA('D12fZ1v9WK3VhpLGejb99GT6MzwPjGWLhjN8upQmpump')">D12fZ1...pump</td>
+            <td>01/05 05:23</td>
+            <td>01/05 05:35</td>
+            <td>12m</td>
+            <td>$179,300</td>
+            <td>$222,241</td>
+            <td class="profit">+24%</td>
+            <td>100m</td>
+            <td>837</td>
+            <td class="profit">$41.54</td>
+            <td class="profit">20.5%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>FOID</td>
+            <td class="ca-cell" onclick="copyCA('HEjKJoVSk6552wirqJW9yz9fnvbSfKuF64aDKNoWpump')">HEjKJo...pump</td>
+            <td>01/05 05:29</td>
+            <td>01/05 06:42</td>
+            <td>74m</td>
+            <td>$7,436</td>
+            <td>$8,625</td>
+            <td class="profit">+16%</td>
+            <td>321m</td>
+            <td>207</td>
+            <td class="profit">$39.93</td>
+            <td class="profit">19.7%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>k8o5</td>
+            <td class="ca-cell" onclick="copyCA('3FkfFXtMDVkKJ6SAouMSK4qYFmErYxSnAUx6vP52pump')">3FkfFX...pump</td>
+            <td>01/04 23:45</td>
+            <td>01/04 23:49</td>
+            <td>5m</td>
+            <td>$38,756</td>
+            <td>$45,347</td>
+            <td class="profit">+17%</td>
+            <td>1646m</td>
+            <td>255</td>
+            <td class="profit">$39.82</td>
+            <td class="profit">19.7%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>CARJAK</td>
+            <td class="ca-cell" onclick="copyCA('FuUa2Z5uvqnw16eeSbbMMbnsMAbc3oA9uYm5Uydgpump')">FuUa2Z...pump</td>
+            <td>01/05 04:31</td>
+            <td>01/05 04:33</td>
+            <td>2m</td>
+            <td>$57,514</td>
+            <td>$65,530</td>
+            <td class="profit">+14%</td>
+            <td>1478m</td>
+            <td>331</td>
+            <td class="profit">$39.69</td>
+            <td class="profit">19.6%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>json</td>
+            <td class="ca-cell" onclick="copyCA('DP97WVT3RaQBZS2nYfnq99agzqP3czkS8MxEk4gFpump')">DP97WV...pump</td>
+            <td>01/05 00:54</td>
+            <td>01/05 01:13</td>
+            <td>19m</td>
+            <td>$24,476</td>
+            <td>$29,769</td>
+            <td class="profit">+22%</td>
+            <td>38m</td>
+            <td>614</td>
+            <td class="profit">$39.66</td>
+            <td class="profit">19.6%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>GAPE</td>
+            <td class="ca-cell" onclick="copyCA('Ha7qJnutwXf92jnVckvtKjC9s4R12UXYh4qUWo5Rpump')">Ha7qJn...pump</td>
+            <td>01/05 05:05</td>
+            <td>01/05 05:12</td>
+            <td>7m</td>
+            <td>$13,755</td>
+            <td>$16,027</td>
+            <td class="profit">+17%</td>
+            <td>5040m</td>
+            <td>154</td>
+            <td class="profit">$39.55</td>
+            <td class="profit">19.5%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>json</td>
+            <td class="ca-cell" onclick="copyCA('DP97WVT3RaQBZS2nYfnq99agzqP3czkS8MxEk4gFpump')">DP97WV...pump</td>
+            <td>01/05 01:06</td>
+            <td>01/05 02:46</td>
+            <td>100m</td>
+            <td>$24,742</td>
+            <td>$38,427</td>
+            <td class="profit">+55%</td>
+            <td>50m</td>
+            <td>592</td>
+            <td class="profit">$39.21</td>
+            <td class="profit">19.4%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>pitbull</td>
+            <td class="ca-cell" onclick="copyCA('DB1fqYMLTbZFdzFs7NL58uoZeohtEUvoEhjD9vwppump')">DB1fqY...pump</td>
+            <td>01/05 04:49</td>
+            <td>01/05 06:21</td>
+            <td>93m</td>
+            <td>$23,003</td>
+            <td>$26,656</td>
+            <td class="profit">+16%</td>
+            <td>6054m</td>
+            <td>176</td>
+            <td class="profit">$38.48</td>
+            <td class="profit">19.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Miao</td>
+            <td class="ca-cell" onclick="copyCA('j8b2HCin25oKLjttFevHBU7EdqkeXZgPkpUV6fYpump')">j8b2HC...pump</td>
+            <td>01/05 01:39</td>
+            <td>01/05 01:49</td>
+            <td>9m</td>
+            <td>$16,123</td>
+            <td>$19,105</td>
+            <td class="profit">+18%</td>
+            <td>753m</td>
+            <td>596</td>
+            <td class="profit">$36.98</td>
+            <td class="profit">18.3%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>GRANNY</td>
+            <td class="ca-cell" onclick="copyCA('4zL98Nncs8mHn3Aaw8naCdusLbRStKoxcfHqA4Wwpump')">4zL98N...pump</td>
+            <td>01/05 05:36</td>
+            <td>01/05 08:10</td>
+            <td>154m</td>
+            <td>$14,021</td>
+            <td>$9,535</td>
+            <td class="loss">-32%</td>
+            <td>4539m</td>
+            <td>226</td>
+            <td class="profit">$36.62</td>
+            <td class="profit">18.1%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>LAUNCHLAB</td>
+            <td class="ca-cell" onclick="copyCA('5wT9K2qfSGgfU8piHA5an51YBE5wZUNzczH3ipyYpump')">5wT9K2...pump</td>
+            <td>01/04 23:45</td>
+            <td>01/04 23:52</td>
+            <td>7m</td>
+            <td>$118,588</td>
+            <td>$132,549</td>
+            <td class="profit">+12%</td>
+            <td>278m</td>
+            <td>794</td>
+            <td class="profit">$36.49</td>
+            <td class="profit">18.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Void</td>
+            <td class="ca-cell" onclick="copyCA('9hSaLB4a674pns3uJCYRu4u5Bbvi4UwBcrS9AKnFpump')">9hSaLB...pump</td>
+            <td>01/05 03:46</td>
+            <td>01/05 04:05</td>
+            <td>19m</td>
+            <td>$81,953</td>
+            <td>$94,517</td>
+            <td class="profit">+15%</td>
+            <td>5349m</td>
+            <td>674</td>
+            <td class="profit">$36.42</td>
+            <td class="profit">18.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Lobster</td>
+            <td class="ca-cell" onclick="copyCA('3zAEdmFb74arSbJ5isPU8gWj8MGUJ4GzL4XF6hcwpump')">3zAEdm...pump</td>
+            <td>01/05 06:04</td>
+            <td>01/05 07:06</td>
+            <td>62m</td>
+            <td>N/A</td>
+            <td>$20,216</td>
+            <td class="loss">+0%</td>
+            <td>0m</td>
+            <td>0</td>
+            <td class="profit">$35.73</td>
+            <td class="profit">17.6%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>MPGA</td>
+            <td class="ca-cell" onclick="copyCA('8aTnDuDzgAxdaJBvCFHFCjKsycPq88m1kMVCCnHbpump')">8aTnDu...pump</td>
+            <td>01/05 03:46</td>
+            <td>01/05 07:01</td>
+            <td>195m</td>
+            <td>$53,232</td>
+            <td>$76,424</td>
+            <td class="profit">+44%</td>
+            <td>1304m</td>
+            <td>487</td>
+            <td class="profit">$70.59</td>
+            <td class="profit">17.4%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>交易猫</td>
+            <td class="ca-cell" onclick="copyCA('Gysp4iZ6uNuAksAPR37fQwLDRFU9Rz255UjExhiwpump')">Gysp4i...pump</td>
+            <td>01/05 07:55</td>
+            <td>01/05 07:57</td>
+            <td>2m</td>
+            <td>N/A</td>
+            <td>$154,811</td>
+            <td class="loss">+0%</td>
+            <td>0m</td>
+            <td>0</td>
+            <td class="profit">$34.83</td>
+            <td class="profit">17.2%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>TRAX </td>
+            <td class="ca-cell" onclick="copyCA('Dk2pDpyS1H6S5TCv3Afx8bmxJb1XbsWBJbReXtjipump')">Dk2pDp...pump</td>
+            <td>01/05 02:11</td>
+            <td>01/05 02:25</td>
+            <td>14m</td>
+            <td>$94,378</td>
+            <td>$106,096</td>
+            <td class="profit">+12%</td>
+            <td>2641m</td>
+            <td>905</td>
+            <td class="profit">$34.78</td>
+            <td class="profit">17.2%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>VCASH</td>
+            <td class="ca-cell" onclick="copyCA('BWdwwcAJarHt9JtgSgPgFJG1eEcd3vSn9j9DnQKqpump')">BWdwwc...pump</td>
+            <td>01/05 08:31</td>
+            <td>01/05 08:52</td>
+            <td>21m</td>
+            <td>$118,689</td>
+            <td>$134,016</td>
+            <td class="profit">+13%</td>
+            <td>629m</td>
+            <td>607</td>
+            <td class="profit">$34.76</td>
+            <td class="profit">17.2%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>GleGle</td>
+            <td class="ca-cell" onclick="copyCA('C5qsCUv2wFUiX3HddbQYG81jSUShXBygngJQJ1y9pump')">C5qsCU...pump</td>
+            <td>01/05 08:22</td>
+            <td>01/05 08:34</td>
+            <td>12m</td>
+            <td>$54,385</td>
+            <td>$62,391</td>
+            <td class="profit">+15%</td>
+            <td>1130m</td>
+            <td>472</td>
+            <td class="profit">$33.48</td>
+            <td class="profit">16.5%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>json</td>
+            <td class="ca-cell" onclick="copyCA('DP97WVT3RaQBZS2nYfnq99agzqP3czkS8MxEk4gFpump')">DP97WV...pump</td>
+            <td>01/05 06:05</td>
+            <td>01/05 07:04</td>
+            <td>59m</td>
+            <td>$49,875</td>
+            <td>$42,756</td>
+            <td class="loss">-14%</td>
+            <td>349m</td>
+            <td>619</td>
+            <td class="profit">$33.46</td>
+            <td class="profit">16.5%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Fido</td>
+            <td class="ca-cell" onclick="copyCA('CtZDuSwo7pHpKvoQnNj93azxAH9F3SbcBsVqNrZhpump')">CtZDuS...pump</td>
+            <td>01/05 04:48</td>
+            <td>01/05 04:51</td>
+            <td>2m</td>
+            <td>$11,948</td>
+            <td>$12,786</td>
+            <td class="profit">+7%</td>
+            <td>4810m</td>
+            <td>174</td>
+            <td class="profit">$33.44</td>
+            <td class="profit">16.5%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>GleGle</td>
+            <td class="ca-cell" onclick="copyCA('C5qsCUv2wFUiX3HddbQYG81jSUShXBygngJQJ1y9pump')">C5qsCU...pump</td>
+            <td>01/05 06:59</td>
+            <td>01/05 07:02</td>
+            <td>2m</td>
+            <td>$55,223</td>
+            <td>$60,748</td>
+            <td class="profit">+10%</td>
+            <td>1047m</td>
+            <td>459</td>
+            <td class="profit">$32.56</td>
+            <td class="profit">16.1%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Neurosama</td>
+            <td class="ca-cell" onclick="copyCA('5FK2bfAmNDtEG57GgmbodU99XPX47HrmuvT5x3LDpump')">5FK2bf...pump</td>
+            <td>01/05 03:05</td>
+            <td>01/05 03:13</td>
+            <td>7m</td>
+            <td>$675,771</td>
+            <td>$788,131</td>
+            <td class="profit">+17%</td>
+            <td>16608m</td>
+            <td>2030</td>
+            <td class="profit">$32.32</td>
+            <td class="profit">16.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>CALM </td>
+            <td class="ca-cell" onclick="copyCA('6xDiFWhuc4TBS86gJKWpFYfRSftguYWPWQBgrX3ipump')">6xDiFW...pump</td>
+            <td>01/05 07:55</td>
+            <td>01/05 08:16</td>
+            <td>21m</td>
+            <td>$37,011</td>
+            <td>$40,545</td>
+            <td class="profit">+10%</td>
+            <td>515m</td>
+            <td>224</td>
+            <td class="profit">$31.98</td>
+            <td class="profit">15.8%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Fido</td>
+            <td class="ca-cell" onclick="copyCA('CtZDuSwo7pHpKvoQnNj93azxAH9F3SbcBsVqNrZhpump')">CtZDuS...pump</td>
+            <td>01/05 04:55</td>
+            <td>01/05 04:58</td>
+            <td>2m</td>
+            <td>$10,727</td>
+            <td>$11,878</td>
+            <td class="profit">+11%</td>
+            <td>4817m</td>
+            <td>167</td>
+            <td class="profit">$30.38</td>
+            <td class="profit">15.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>LAUNCHLAB</td>
+            <td class="ca-cell" onclick="copyCA('5wT9K2qfSGgfU8piHA5an51YBE5wZUNzczH3ipyYpump')">5wT9K2...pump</td>
+            <td>01/05 01:34</td>
+            <td>01/05 01:38</td>
+            <td>5m</td>
+            <td>$138,771</td>
+            <td>$157,157</td>
+            <td class="profit">+13%</td>
+            <td>387m</td>
+            <td>991</td>
+            <td class="profit">$30.24</td>
+            <td class="profit">14.9%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>meme</td>
+            <td class="ca-cell" onclick="copyCA('3mRdAwMrgikR5Qnn2TLwjfZzcNfBA2tvv2nv4GhDpump')">3mRdAw...pump</td>
+            <td>01/05 02:32</td>
+            <td>01/05 03:58</td>
+            <td>85m</td>
+            <td>$27,079</td>
+            <td>$20,445</td>
+            <td class="loss">-24%</td>
+            <td>1199m</td>
+            <td>404</td>
+            <td class="profit">$29.29</td>
+            <td class="profit">14.5%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>GREAT</td>
+            <td class="ca-cell" onclick="copyCA('4fBTvktD3uBp74sGQQB2WFjRnSfayHbWDfPoxjWEpump')">4fBTvk...pump</td>
+            <td>01/05 07:17</td>
+            <td>01/05 08:28</td>
+            <td>71m</td>
+            <td>$48,890</td>
+            <td>$69,795</td>
+            <td class="profit">+43%</td>
+            <td>201m</td>
+            <td>609</td>
+            <td class="profit">$29.28</td>
+            <td class="profit">14.5%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>NOMNOM</td>
+            <td class="ca-cell" onclick="copyCA('5WfwByPFr2U9rCN1DL4bb5X3fW9bf1ngy15ZoATxPpvN')">5WfwBy...PpvN</td>
+            <td>01/05 02:07</td>
+            <td>01/05 02:40</td>
+            <td>33m</td>
+            <td>$11,946</td>
+            <td>N/A</td>
+            <td class="loss">+0%</td>
+            <td>10452m</td>
+            <td>209</td>
+            <td class="profit">$29.11</td>
+            <td class="profit">14.4%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>DECLOUD</td>
+            <td class="ca-cell" onclick="copyCA('EtxPjU3zbkGHgWe3XtBgVH2TxPq6kXjhxuwrFimpump')">EtxPjU...pump</td>
+            <td>01/05 01:00</td>
+            <td>01/05 01:38</td>
+            <td>38m</td>
+            <td>$146,410</td>
+            <td>$158,129</td>
+            <td class="profit">+8%</td>
+            <td>4364m</td>
+            <td>407</td>
+            <td class="profit">$29.06</td>
+            <td class="profit">14.3%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>BOWL</td>
+            <td class="ca-cell" onclick="copyCA('86PtAo1z8th9tgv1BhgLiyuE91tWokUXhBCc5aLGpump')">86PtAo...pump</td>
+            <td>01/05 04:08</td>
+            <td>01/05 04:15</td>
+            <td>7m</td>
+            <td>$37,174</td>
+            <td>$41,424</td>
+            <td class="profit">+11%</td>
+            <td>185m</td>
+            <td>327</td>
+            <td class="profit">$28.58</td>
+            <td class="profit">14.1%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Brick</td>
+            <td class="ca-cell" onclick="copyCA('7jfGSYYMZktd18sLzmAycLLvTxyrkvskQ8rivAMmpump')">7jfGSY...pump</td>
+            <td>01/05 03:50</td>
+            <td>01/05 04:31</td>
+            <td>40m</td>
+            <td>$22,380</td>
+            <td>$22,698</td>
+            <td class="profit">+1%</td>
+            <td>1558m</td>
+            <td>152</td>
+            <td class="profit">$28.12</td>
+            <td class="profit">13.9%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Mia</td>
+            <td class="ca-cell" onclick="copyCA('FyPDfX92B4uEk4zZouy96d1Kk1LgnCznBpzAFSsZpump')">FyPDfX...pump</td>
+            <td>01/05 00:49</td>
+            <td>01/05 00:58</td>
+            <td>9m</td>
+            <td>$34,267</td>
+            <td>$37,632</td>
+            <td class="profit">+10%</td>
+            <td>700m</td>
+            <td>382</td>
+            <td class="profit">$27.40</td>
+            <td class="profit">13.5%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>FYC</td>
+            <td class="ca-cell" onclick="copyCA('EnPANkfatLeou1A7785qYREghWiGx6Xxh4TJnn43pump')">EnPANk...pump</td>
+            <td>01/05 01:13</td>
+            <td>01/05 01:18</td>
+            <td>5m</td>
+            <td>$25,696</td>
+            <td>$27,939</td>
+            <td class="profit">+9%</td>
+            <td>409m</td>
+            <td>351</td>
+            <td class="profit">$27.36</td>
+            <td class="profit">13.5%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Sipping</td>
+            <td class="ca-cell" onclick="copyCA('GpYzsoASKnNtkNo2zQMAMwrg76XoT76rqBRfHEoZpump')">GpYzso...pump</td>
+            <td>01/05 04:53</td>
+            <td>01/05 05:38</td>
+            <td>45m</td>
+            <td>$44,091</td>
+            <td>$48,568</td>
+            <td class="profit">+10%</td>
+            <td>3267m</td>
+            <td>291</td>
+            <td class="profit">$25.96</td>
+            <td class="profit">12.8%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Mia</td>
+            <td class="ca-cell" onclick="copyCA('FyPDfX92B4uEk4zZouy96d1Kk1LgnCznBpzAFSsZpump')">FyPDfX...pump</td>
+            <td>01/05 04:04</td>
+            <td>01/05 04:35</td>
+            <td>31m</td>
+            <td>$202,803</td>
+            <td>$229,552</td>
+            <td class="profit">+13%</td>
+            <td>895m</td>
+            <td>1037</td>
+            <td class="profit">$25.74</td>
+            <td class="profit">12.7%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>FOID</td>
+            <td class="ca-cell" onclick="copyCA('HEjKJoVSk6552wirqJW9yz9fnvbSfKuF64aDKNoWpump')">HEjKJo...pump</td>
+            <td>01/05 00:39</td>
+            <td>01/05 00:46</td>
+            <td>7m</td>
+            <td>$39,751</td>
+            <td>$47,016</td>
+            <td class="profit">+18%</td>
+            <td>31m</td>
+            <td>343</td>
+            <td class="profit">$25.62</td>
+            <td class="profit">12.7%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>CARJAK</td>
+            <td class="ca-cell" onclick="copyCA('FuUa2Z5uvqnw16eeSbbMMbnsMAbc3oA9uYm5Uydgpump')">FuUa2Z...pump</td>
+            <td>01/05 02:53</td>
+            <td>01/05 03:03</td>
+            <td>9m</td>
+            <td>$64,279</td>
+            <td>$70,296</td>
+            <td class="profit">+9%</td>
+            <td>1381m</td>
+            <td>337</td>
+            <td class="profit">$25.16</td>
+            <td class="profit">12.4%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>meme</td>
+            <td class="ca-cell" onclick="copyCA('3mRdAwMrgikR5Qnn2TLwjfZzcNfBA2tvv2nv4GhDpump')">3mRdAw...pump</td>
+            <td>01/05 04:50</td>
+            <td>01/05 07:19</td>
+            <td>150m</td>
+            <td>$16,333</td>
+            <td>N/A</td>
+            <td class="loss">+0%</td>
+            <td>1336m</td>
+            <td>401</td>
+            <td class="profit">$24.96</td>
+            <td class="profit">12.3%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>BOMP(p)</td>
+            <td class="ca-cell" onclick="copyCA('CfJxopGjVVPWsbaDM8izGbi3gL5U2C4tDYxeX32dpump')">CfJxop...pump</td>
+            <td>01/05 02:37</td>
+            <td>01/05 02:54</td>
+            <td>17m</td>
+            <td>$191,901</td>
+            <td>$213,633</td>
+            <td class="profit">+11%</td>
+            <td>598m</td>
+            <td>1523</td>
+            <td class="profit">$24.79</td>
+            <td class="profit">12.2%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>BOWL</td>
+            <td class="ca-cell" onclick="copyCA('86PtAo1z8th9tgv1BhgLiyuE91tWokUXhBCc5aLGpump')">86PtAo...pump</td>
+            <td>01/05 08:15</td>
+            <td>01/05 08:20</td>
+            <td>5m</td>
+            <td>$24,731</td>
+            <td>$26,293</td>
+            <td class="profit">+6%</td>
+            <td>432m</td>
+            <td>282</td>
+            <td class="profit">$24.38</td>
+            <td class="profit">12.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>INUF</td>
+            <td class="ca-cell" onclick="copyCA('5885ru69zduER1X1AfzVbKVZxJhH67XfAYkRPKWJpump')">5885ru...pump</td>
+            <td>01/05 02:07</td>
+            <td>01/05 02:10</td>
+            <td>2m</td>
+            <td>$50,218</td>
+            <td>$55,688</td>
+            <td class="profit">+11%</td>
+            <td>71m</td>
+            <td>588</td>
+            <td class="profit">$24.36</td>
+            <td class="profit">12.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>GleGle</td>
+            <td class="ca-cell" onclick="copyCA('C5qsCUv2wFUiX3HddbQYG81jSUShXBygngJQJ1y9pump')">C5qsCU...pump</td>
+            <td>01/05 07:18</td>
+            <td>01/05 07:23</td>
+            <td>5m</td>
+            <td>$60,035</td>
+            <td>$64,955</td>
+            <td class="profit">+8%</td>
+            <td>1066m</td>
+            <td>454</td>
+            <td class="profit">$23.63</td>
+            <td class="profit">11.7%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>k8o5</td>
+            <td class="ca-cell" onclick="copyCA('3FkfFXtMDVkKJ6SAouMSK4qYFmErYxSnAUx6vP52pump')">3FkfFX...pump</td>
+            <td>01/05 02:07</td>
+            <td>01/05 02:12</td>
+            <td>5m</td>
+            <td>$43,211</td>
+            <td>$46,975</td>
+            <td class="profit">+9%</td>
+            <td>1788m</td>
+            <td>258</td>
+            <td class="profit">$23.48</td>
+            <td class="profit">11.6%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>SOMAL</td>
+            <td class="ca-cell" onclick="copyCA('AjW977tZ4YCwZfnj85Fm8AjPxseTt4XFHnNExBAPVqcE')">AjW977...VqcE</td>
+            <td>01/05 00:57</td>
+            <td>01/05 03:10</td>
+            <td>133m</td>
+            <td>$12,799</td>
+            <td>$13,972</td>
+            <td class="profit">+9%</td>
+            <td>10133m</td>
+            <td>428</td>
+            <td class="profit">$22.95</td>
+            <td class="profit">11.3%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>HAMM</td>
+            <td class="ca-cell" onclick="copyCA('8uCdddfxYNqxYPQGEzqrSmpKkVyMHnKvFTahp4Yopump')">8uCddd...pump</td>
+            <td>01/05 01:45</td>
+            <td>01/05 01:55</td>
+            <td>10m</td>
+            <td>$151,371</td>
+            <td>$166,236</td>
+            <td class="profit">+10%</td>
+            <td>47312m</td>
+            <td>506</td>
+            <td class="profit">$22.91</td>
+            <td class="profit">11.3%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>FORM</td>
+            <td class="ca-cell" onclick="copyCA('5fq9ony5uQRNNvfzcvxdBc6Z7X6JRJh58uMrss1Apump')">5fq9on...pump</td>
+            <td>01/05 07:59</td>
+            <td>01/05 08:58</td>
+            <td>59m</td>
+            <td>$13,323</td>
+            <td>$14,328</td>
+            <td class="profit">+8%</td>
+            <td>2964m</td>
+            <td>113</td>
+            <td class="profit">$22.54</td>
+            <td class="profit">11.1%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Opinion</td>
+            <td class="ca-cell" onclick="copyCA('f85m3YXHER29D7jRKgCa6bwhbhvwq2bJ2f91QXJpump')">f85m3Y...pump</td>
+            <td>01/05 06:44</td>
+            <td>01/05 06:54</td>
+            <td>9m</td>
+            <td>$15,176</td>
+            <td>$16,259</td>
+            <td class="profit">+7%</td>
+            <td>4188m</td>
+            <td>256</td>
+            <td class="profit">$22.50</td>
+            <td class="profit">11.1%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>juan</td>
+            <td class="ca-cell" onclick="copyCA('7eLSZuUZ66YA1JPYmpG9ApgoTdZmzHDfz32YngbPpump')">7eLSZu...pump</td>
+            <td>01/05 05:03</td>
+            <td>01/05 05:22</td>
+            <td>19m</td>
+            <td>$49,356</td>
+            <td>$53,650</td>
+            <td class="profit">+9%</td>
+            <td>7387m</td>
+            <td>1780</td>
+            <td class="profit">$22.39</td>
+            <td class="profit">11.1%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>GleGle</td>
+            <td class="ca-cell" onclick="copyCA('C5qsCUv2wFUiX3HddbQYG81jSUShXBygngJQJ1y9pump')">C5qsCU...pump</td>
+            <td>01/05 00:23</td>
+            <td>01/05 02:36</td>
+            <td>133m</td>
+            <td>$15,369</td>
+            <td>$16,550</td>
+            <td class="profit">+8%</td>
+            <td>650m</td>
+            <td>253</td>
+            <td class="profit">$21.54</td>
+            <td class="profit">10.6%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>glegle</td>
+            <td class="ca-cell" onclick="copyCA('D12fZ1v9WK3VhpLGejb99GT6MzwPjGWLhjN8upQmpump')">D12fZ1...pump</td>
+            <td>01/05 07:12</td>
+            <td>01/05 07:24</td>
+            <td>12m</td>
+            <td>$107,441</td>
+            <td>$112,084</td>
+            <td class="profit">+4%</td>
+            <td>209m</td>
+            <td>940</td>
+            <td class="profit">$20.94</td>
+            <td class="profit">10.3%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>GRANNY</td>
+            <td class="ca-cell" onclick="copyCA('4zL98Nncs8mHn3Aaw8naCdusLbRStKoxcfHqA4Wwpump')">4zL98N...pump</td>
+            <td>01/05 04:58</td>
+            <td>01/05 05:03</td>
+            <td>5m</td>
+            <td>N/A</td>
+            <td>$29,413</td>
+            <td class="loss">+0%</td>
+            <td>0m</td>
+            <td>0</td>
+            <td class="profit">$20.56</td>
+            <td class="profit">10.2%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Bloomer</td>
+            <td class="ca-cell" onclick="copyCA('31rCeWLRsWRNn6NtxGAUFRE1wcNK3aAxxC9cSToMpump')">31rCeW...pump</td>
+            <td>01/05 02:21</td>
+            <td>01/05 02:40</td>
+            <td>19m</td>
+            <td>$53,779</td>
+            <td>$58,132</td>
+            <td class="profit">+8%</td>
+            <td>1100m</td>
+            <td>384</td>
+            <td class="profit">$20.40</td>
+            <td class="profit">10.1%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>BOWL</td>
+            <td class="ca-cell" onclick="copyCA('86PtAo1z8th9tgv1BhgLiyuE91tWokUXhBCc5aLGpump')">86PtAo...pump</td>
+            <td>01/05 01:58</td>
+            <td>01/05 02:00</td>
+            <td>2m</td>
+            <td>$61,197</td>
+            <td>$67,867</td>
+            <td class="profit">+11%</td>
+            <td>55m</td>
+            <td>385</td>
+            <td class="profit">$20.33</td>
+            <td class="profit">10.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>meme</td>
+            <td class="ca-cell" onclick="copyCA('85ymfLLfeyYA9wV1PorpLBW1pprWfPgnm3cMEx5ppump')">85ymfL...pump</td>
+            <td>01/05 03:05</td>
+            <td>01/05 03:12</td>
+            <td>7m</td>
+            <td>$604,561</td>
+            <td>$662,047</td>
+            <td class="profit">+10%</td>
+            <td>1355m</td>
+            <td>2583</td>
+            <td class="profit">$20.27</td>
+            <td class="profit">10.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>COMMUNISM</td>
+            <td class="ca-cell" onclick="copyCA('3HQjEYDyUcGdmNkkqGxG7M5CQk9P4TSEspGWU9dRpump')">3HQjEY...pump</td>
+            <td>01/05 05:44</td>
+            <td>01/05 06:46</td>
+            <td>62m</td>
+            <td>$6,952</td>
+            <td>$7,252</td>
+            <td class="profit">+4%</td>
+            <td>891m</td>
+            <td>296</td>
+            <td class="profit">$20.15</td>
+            <td class="profit">9.9%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>gm</td>
+            <td class="ca-cell" onclick="copyCA('9RaBDMwL2hcmah5yzXjBLiiYxHiBbd2jSEH3q6KCpump')">9RaBDM...pump</td>
+            <td>01/05 02:31</td>
+            <td>01/05 02:36</td>
+            <td>5m</td>
+            <td>$1,465,235</td>
+            <td>$1,586,004</td>
+            <td class="profit">+8%</td>
+            <td>14379m</td>
+            <td>619</td>
+            <td class="profit">$20.14</td>
+            <td class="profit">9.9%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>VCASH</td>
+            <td class="ca-cell" onclick="copyCA('BWdwwcAJarHt9JtgSgPgFJG1eEcd3vSn9j9DnQKqpump')">BWdwwc...pump</td>
+            <td>01/05 00:36</td>
+            <td>01/05 00:50</td>
+            <td>14m</td>
+            <td>$154,069</td>
+            <td>$165,648</td>
+            <td class="profit">+8%</td>
+            <td>154m</td>
+            <td>525</td>
+            <td class="profit">$19.88</td>
+            <td class="profit">9.8%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>SATOSHI</td>
+            <td class="ca-cell" onclick="copyCA('Edzw1KGP22SVfP9seSEiXgtgFSbECLemorE2iABtpump')">Edzw1K...pump</td>
+            <td>01/05 01:36</td>
+            <td>01/05 01:41</td>
+            <td>5m</td>
+            <td>$8,397</td>
+            <td>$8,901</td>
+            <td class="profit">+6%</td>
+            <td>620m</td>
+            <td>247</td>
+            <td class="profit">$19.82</td>
+            <td class="profit">9.8%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Altcoin</td>
+            <td class="ca-cell" onclick="copyCA('6PDR3o1KGccEt3m8XfkoRvkBfjkkkwuQz5gtLxGApump')">6PDR3o...pump</td>
+            <td>01/05 00:18</td>
+            <td>01/05 01:07</td>
+            <td>50m</td>
+            <td>$583,847</td>
+            <td>$610,036</td>
+            <td class="profit">+4%</td>
+            <td>71836m</td>
+            <td>1402</td>
+            <td class="profit">$19.46</td>
+            <td class="profit">9.6%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>k8o5</td>
+            <td class="ca-cell" onclick="copyCA('3FkfFXtMDVkKJ6SAouMSK4qYFmErYxSnAUx6vP52pump')">3FkfFX...pump</td>
+            <td>01/05 01:15</td>
+            <td>01/05 01:34</td>
+            <td>19m</td>
+            <td>$45,723</td>
+            <td>N/A</td>
+            <td class="loss">+0%</td>
+            <td>1736m</td>
+            <td>261</td>
+            <td class="profit">$19.36</td>
+            <td class="profit">9.6%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Mia</td>
+            <td class="ca-cell" onclick="copyCA('DhHFXFYWiRHV3yZHGUsEd3GPqLmwUCjAwX1mVAubpump')">DhHFXF...pump</td>
+            <td>01/05 03:29</td>
+            <td>01/05 03:31</td>
+            <td>2m</td>
+            <td>$49,293</td>
+            <td>$52,068</td>
+            <td class="profit">+6%</td>
+            <td>52m</td>
+            <td>290</td>
+            <td class="profit">$19.32</td>
+            <td class="profit">9.5%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>FKW</td>
+            <td class="ca-cell" onclick="copyCA('7fuWhJ9eb7R8qdETugCg38uzSFVUmX4oSbyEx7Pspump')">7fuWhJ...pump</td>
+            <td>01/05 05:24</td>
+            <td>01/05 05:50</td>
+            <td>26m</td>
+            <td>$6,335</td>
+            <td>$7,135</td>
+            <td class="profit">+13%</td>
+            <td>10719m</td>
+            <td>211</td>
+            <td class="profit">$38.32</td>
+            <td class="profit">9.5%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Miao</td>
+            <td class="ca-cell" onclick="copyCA('j8b2HCin25oKLjttFevHBU7EdqkeXZgPkpUV6fYpump')">j8b2HC...pump</td>
+            <td>01/05 02:08</td>
+            <td>01/05 02:13</td>
+            <td>5m</td>
+            <td>$14,835</td>
+            <td>$15,740</td>
+            <td class="profit">+6%</td>
+            <td>781m</td>
+            <td>568</td>
+            <td class="profit">$18.57</td>
+            <td class="profit">9.2%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>MTGA</td>
+            <td class="ca-cell" onclick="copyCA('5Tw655bRaF53sD6AGb8S81Ryuo67QvdhWEubsX88pump')">5Tw655...pump</td>
+            <td>01/05 07:18</td>
+            <td>01/05 07:49</td>
+            <td>31m</td>
+            <td>$7,800</td>
+            <td>$8,148</td>
+            <td class="profit">+4%</td>
+            <td>275m</td>
+            <td>202</td>
+            <td class="profit">$18.15</td>
+            <td class="profit">9.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>meme</td>
+            <td class="ca-cell" onclick="copyCA('3mRdAwMrgikR5Qnn2TLwjfZzcNfBA2tvv2nv4GhDpump')">3mRdAw...pump</td>
+            <td>01/05 07:17</td>
+            <td>01/05 08:47</td>
+            <td>90m</td>
+            <td>$26,375</td>
+            <td>$17,012</td>
+            <td class="loss">-35%</td>
+            <td>1483m</td>
+            <td>436</td>
+            <td class="profit">$18.13</td>
+            <td class="profit">9.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>VCASH</td>
+            <td class="ca-cell" onclick="copyCA('BWdwwcAJarHt9JtgSgPgFJG1eEcd3vSn9j9DnQKqpump')">BWdwwc...pump</td>
+            <td>01/05 01:43</td>
+            <td>01/05 01:50</td>
+            <td>7m</td>
+            <td>$111,637</td>
+            <td>$120,484</td>
+            <td class="profit">+8%</td>
+            <td>221m</td>
+            <td>575</td>
+            <td class="profit">$18.05</td>
+            <td class="profit">8.9%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>MACROHARDRR</td>
+            <td class="ca-cell" onclick="copyCA('8PRUHS92RWnDGmBCCgQADVXeTcAojGYT8R1TDRHspump')">8PRUHS...pump</td>
+            <td>01/05 06:25</td>
+            <td>01/05 06:35</td>
+            <td>9m</td>
+            <td>$9,104</td>
+            <td>$9,199</td>
+            <td class="profit">+1%</td>
+            <td>7435m</td>
+            <td>152</td>
+            <td class="profit">$18.00</td>
+            <td class="profit">8.9%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>meme</td>
+            <td class="ca-cell" onclick="copyCA('3mRdAwMrgikR5Qnn2TLwjfZzcNfBA2tvv2nv4GhDpump')">3mRdAw...pump</td>
+            <td>01/05 03:55</td>
+            <td>01/05 04:52</td>
+            <td>57m</td>
+            <td>$18,640</td>
+            <td>$17,004</td>
+            <td class="loss">-9%</td>
+            <td>1282m</td>
+            <td>402</td>
+            <td class="profit">$17.68</td>
+            <td class="profit">8.7%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>LORB</td>
+            <td class="ca-cell" onclick="copyCA('9PCrrBZwzd2A324N7vh7rMgW9NPP5ETftnhiQTuepump')">9PCrrB...pump</td>
+            <td>01/05 00:55</td>
+            <td>01/05 03:08</td>
+            <td>133m</td>
+            <td>$67,124</td>
+            <td>$71,492</td>
+            <td class="profit">+7%</td>
+            <td>40219m</td>
+            <td>461</td>
+            <td class="profit">$17.48</td>
+            <td class="profit">8.6%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>k8o5</td>
+            <td class="ca-cell" onclick="copyCA('3FkfFXtMDVkKJ6SAouMSK4qYFmErYxSnAUx6vP52pump')">3FkfFX...pump</td>
+            <td>01/05 02:43</td>
+            <td>01/05 03:30</td>
+            <td>47m</td>
+            <td>$35,630</td>
+            <td>$37,643</td>
+            <td class="profit">+6%</td>
+            <td>1824m</td>
+            <td>257</td>
+            <td class="profit">$17.39</td>
+            <td class="profit">8.6%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>JIGGLYPUFF</td>
+            <td class="ca-cell" onclick="copyCA('AoKgjNMumZ2JjHFaGnrcKSnuTTRqrHWdKHhPMhzjpump')">AoKgjN...pump</td>
+            <td>01/05 04:52</td>
+            <td>01/05 06:13</td>
+            <td>81m</td>
+            <td>$29,985</td>
+            <td>$31,760</td>
+            <td class="profit">+6%</td>
+            <td>51929m</td>
+            <td>263</td>
+            <td class="profit">$17.24</td>
+            <td class="profit">8.5%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>grokburn</td>
+            <td class="ca-cell" onclick="copyCA('BZen1ESpiUiXWbicuXSXT8zwiEXhPYYivnk8jhCxpump')">BZen1E...pump</td>
+            <td>01/05 01:22</td>
+            <td>01/05 01:46</td>
+            <td>24m</td>
+            <td>$61,551</td>
+            <td>$65,315</td>
+            <td class="profit">+6%</td>
+            <td>6725m</td>
+            <td>339</td>
+            <td class="profit">$16.27</td>
+            <td class="profit">8.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>CARJAK</td>
+            <td class="ca-cell" onclick="copyCA('FuUa2Z5uvqnw16eeSbbMMbnsMAbc3oA9uYm5Uydgpump')">FuUa2Z...pump</td>
+            <td>01/05 06:11</td>
+            <td>01/05 08:23</td>
+            <td>133m</td>
+            <td>$44,595</td>
+            <td>$47,001</td>
+            <td class="profit">+5%</td>
+            <td>1578m</td>
+            <td>326</td>
+            <td class="profit">$15.83</td>
+            <td class="profit">7.8%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>NFA</td>
+            <td class="ca-cell" onclick="copyCA('AqDLQxzWdugyed5MNEcnM3XGcFVjxxxaaRK7aa7dpump')">AqDLQx...pump</td>
+            <td>01/05 07:12</td>
+            <td>01/05 07:14</td>
+            <td>2m</td>
+            <td>$16,788</td>
+            <td>$17,048</td>
+            <td class="profit">+2%</td>
+            <td>69m</td>
+            <td>368</td>
+            <td class="profit">$15.53</td>
+            <td class="profit">7.7%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>maxxing</td>
+            <td class="ca-cell" onclick="copyCA('32CdQdBUxbCsLy5AUHWmyidfwhgGUr9N573NBUrDpump')">32CdQd...pump</td>
+            <td>01/05 05:32</td>
+            <td>01/05 05:42</td>
+            <td>9m</td>
+            <td>$208,203</td>
+            <td>$219,551</td>
+            <td class="profit">+5%</td>
+            <td>49225m</td>
+            <td>852</td>
+            <td class="profit">$15.23</td>
+            <td class="profit">7.5%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>VCASH</td>
+            <td class="ca-cell" onclick="copyCA('BWdwwcAJarHt9JtgSgPgFJG1eEcd3vSn9j9DnQKqpump')">BWdwwc...pump</td>
+            <td>01/05 07:36</td>
+            <td>01/05 07:39</td>
+            <td>2m</td>
+            <td>$109,150</td>
+            <td>$114,788</td>
+            <td class="profit">+5%</td>
+            <td>574m</td>
+            <td>622</td>
+            <td class="profit">$15.09</td>
+            <td class="profit">7.5%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>AHAB</td>
+            <td class="ca-cell" onclick="copyCA('6Wv4Li6toFybiJajVN3ZBTi7hF8DGbujmewqc86tpump')">6Wv4Li...pump</td>
+            <td>01/05 03:01</td>
+            <td>01/05 05:14</td>
+            <td>133m</td>
+            <td>$34,394</td>
+            <td>$36,226</td>
+            <td class="profit">+5%</td>
+            <td>7099m</td>
+            <td>94</td>
+            <td class="profit">$15.00</td>
+            <td class="profit">7.4%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>GRANNY</td>
+            <td class="ca-cell" onclick="copyCA('4zL98Nncs8mHn3Aaw8naCdusLbRStKoxcfHqA4Wwpump')">4zL98N...pump</td>
+            <td>01/05 01:53</td>
+            <td>01/05 01:57</td>
+            <td>5m</td>
+            <td>$13,061</td>
+            <td>$13,619</td>
+            <td class="profit">+4%</td>
+            <td>4315m</td>
+            <td>192</td>
+            <td class="profit">$14.99</td>
+            <td class="profit">7.4%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Void</td>
+            <td class="ca-cell" onclick="copyCA('9hSaLB4a674pns3uJCYRu4u5Bbvi4UwBcrS9AKnFpump')">9hSaLB...pump</td>
+            <td>01/05 03:20</td>
+            <td>01/05 03:34</td>
+            <td>14m</td>
+            <td>$94,489</td>
+            <td>$99,212</td>
+            <td class="profit">+5%</td>
+            <td>5323m</td>
+            <td>674</td>
+            <td class="profit">$14.25</td>
+            <td class="profit">7.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>maxxing</td>
+            <td class="ca-cell" onclick="copyCA('32CdQdBUxbCsLy5AUHWmyidfwhgGUr9N573NBUrDpump')">32CdQd...pump</td>
+            <td>01/05 06:39</td>
+            <td>01/05 07:00</td>
+            <td>21m</td>
+            <td>$329,961</td>
+            <td>$345,638</td>
+            <td class="profit">+5%</td>
+            <td>49291m</td>
+            <td>909</td>
+            <td class="profit">$13.98</td>
+            <td class="profit">6.9%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Grokrot</td>
+            <td class="ca-cell" onclick="copyCA('BPC8L5UUFJpS5RHQHwnhhx3aSqZEeyPADpFNkcvTpump')">BPC8L5...pump</td>
+            <td>01/05 08:48</td>
+            <td>01/05 08:55</td>
+            <td>7m</td>
+            <td>$4,356</td>
+            <td>$4,365</td>
+            <td class="profit">+0%</td>
+            <td>2830m</td>
+            <td>194</td>
+            <td class="profit">$13.97</td>
+            <td class="profit">6.9%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>BOWL</td>
+            <td class="ca-cell" onclick="copyCA('86PtAo1z8th9tgv1BhgLiyuE91tWokUXhBCc5aLGpump')">86PtAo...pump</td>
+            <td>01/05 03:49</td>
+            <td>01/05 03:57</td>
+            <td>7m</td>
+            <td>$42,010</td>
+            <td>$43,761</td>
+            <td class="profit">+4%</td>
+            <td>166m</td>
+            <td>310</td>
+            <td class="profit">$13.81</td>
+            <td class="profit">6.8%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>SOLBISCUIT</td>
+            <td class="ca-cell" onclick="copyCA('J3mTHLJ3GMcz9ycfvUji5HzeuTvmUQjQSdzChsS5pump')">J3mTHL...pump</td>
+            <td>01/05 06:57</td>
+            <td>01/05 07:14</td>
+            <td>17m</td>
+            <td>$42,317</td>
+            <td>$43,966</td>
+            <td class="profit">+4%</td>
+            <td>6591m</td>
+            <td>312</td>
+            <td class="profit">$13.68</td>
+            <td class="profit">6.8%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>VCASH</td>
+            <td class="ca-cell" onclick="copyCA('BWdwwcAJarHt9JtgSgPgFJG1eEcd3vSn9j9DnQKqpump')">BWdwwc...pump</td>
+            <td>01/05 03:27</td>
+            <td>01/05 03:32</td>
+            <td>5m</td>
+            <td>$215,434</td>
+            <td>$225,922</td>
+            <td class="profit">+5%</td>
+            <td>325m</td>
+            <td>592</td>
+            <td class="profit">$13.63</td>
+            <td class="profit">6.7%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Bratziez</td>
+            <td class="ca-cell" onclick="copyCA('3q7PK6SBjnqzEz4muEYDExtxhuo9asNVXGF5W99tpump')">3q7PK6...pump</td>
+            <td>01/05 07:00</td>
+            <td>01/05 08:07</td>
+            <td>66m</td>
+            <td>$15,657</td>
+            <td>$15,515</td>
+            <td class="loss">-1%</td>
+            <td>57690m</td>
+            <td>215</td>
+            <td class="profit">$13.05</td>
+            <td class="profit">6.4%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Sipping</td>
+            <td class="ca-cell" onclick="copyCA('GpYzsoASKnNtkNo2zQMAMwrg76XoT76rqBRfHEoZpump')">GpYzso...pump</td>
+            <td>01/05 02:28</td>
+            <td>01/05 04:41</td>
+            <td>133m</td>
+            <td>$41,098</td>
+            <td>$39,285</td>
+            <td class="loss">-4%</td>
+            <td>3123m</td>
+            <td>293</td>
+            <td class="profit">$12.92</td>
+            <td class="profit">6.4%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>VCASH</td>
+            <td class="ca-cell" onclick="copyCA('BWdwwcAJarHt9JtgSgPgFJG1eEcd3vSn9j9DnQKqpump')">BWdwwc...pump</td>
+            <td>01/05 06:11</td>
+            <td>01/05 06:16</td>
+            <td>5m</td>
+            <td>$160,775</td>
+            <td>$167,299</td>
+            <td class="profit">+4%</td>
+            <td>489m</td>
+            <td>627</td>
+            <td class="profit">$12.48</td>
+            <td class="profit">6.2%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>SENPAI</td>
+            <td class="ca-cell" onclick="copyCA('6bbW3ZufJaDkGYsQ1dqfLrchqtRQyEATA7g3Fs7tpump')">6bbW3Z...pump</td>
+            <td>01/05 03:40</td>
+            <td>01/05 03:49</td>
+            <td>9m</td>
+            <td>$15,138</td>
+            <td>N/A</td>
+            <td class="loss">+0%</td>
+            <td>828m</td>
+            <td>224</td>
+            <td class="profit">$12.35</td>
+            <td class="profit">6.1%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Bobo Show</td>
+            <td class="ca-cell" onclick="copyCA('ZdBMPxmwBrHvMKY4d4KbDjycDEhfeiaFfHjF13epump')">ZdBMPx...pump</td>
+            <td>01/05 03:20</td>
+            <td>01/05 03:25</td>
+            <td>5m</td>
+            <td>N/A</td>
+            <td>$71,224</td>
+            <td class="loss">+0%</td>
+            <td>0m</td>
+            <td>0</td>
+            <td class="profit">$12.06</td>
+            <td class="profit">6.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Reze</td>
+            <td class="ca-cell" onclick="copyCA('5RncjvjvLkVVHDCaKrPvvSDQofxJmZyhcJaRsmNopump')">5Rncjv...pump</td>
+            <td>01/05 05:50</td>
+            <td>01/05 07:23</td>
+            <td>92m</td>
+            <td>$7,351</td>
+            <td>$7,569</td>
+            <td class="profit">+3%</td>
+            <td>33391m</td>
+            <td>212</td>
+            <td class="profit">$11.63</td>
+            <td class="profit">5.7%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>json</td>
+            <td class="ca-cell" onclick="copyCA('DP97WVT3RaQBZS2nYfnq99agzqP3czkS8MxEk4gFpump')">DP97WV...pump</td>
+            <td>01/05 06:31</td>
+            <td>01/05 07:16</td>
+            <td>45m</td>
+            <td>$37,997</td>
+            <td>$43,005</td>
+            <td class="profit">+13%</td>
+            <td>375m</td>
+            <td>585</td>
+            <td class="profit">$11.57</td>
+            <td class="profit">5.7%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>meme</td>
+            <td class="ca-cell" onclick="copyCA('85ymfLLfeyYA9wV1PorpLBW1pprWfPgnm3cMEx5ppump')">85ymfL...pump</td>
+            <td>01/05 08:06</td>
+            <td>01/05 08:32</td>
+            <td>26m</td>
+            <td>$602,179</td>
+            <td>$633,944</td>
+            <td class="profit">+5%</td>
+            <td>1656m</td>
+            <td>2859</td>
+            <td class="profit">$11.43</td>
+            <td class="profit">5.6%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>testicle</td>
+            <td class="ca-cell" onclick="copyCA('4TyZGqRLG3VcHTGMcLBoPUmqYitMVojXinAmkL8xpump')">4TyZGq...pump</td>
+            <td>01/05 06:09</td>
+            <td>01/05 06:23</td>
+            <td>14m</td>
+            <td>$648,488</td>
+            <td>$674,335</td>
+            <td class="profit">+4%</td>
+            <td>21569m</td>
+            <td>2221</td>
+            <td class="profit">$11.01</td>
+            <td class="profit">5.4%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>VCASH</td>
+            <td class="ca-cell" onclick="copyCA('BWdwwcAJarHt9JtgSgPgFJG1eEcd3vSn9j9DnQKqpump')">BWdwwc...pump</td>
+            <td>01/05 02:18</td>
+            <td>01/05 02:23</td>
+            <td>5m</td>
+            <td>$101,710</td>
+            <td>$105,889</td>
+            <td class="profit">+4%</td>
+            <td>256m</td>
+            <td>540</td>
+            <td class="profit">$10.38</td>
+            <td class="profit">5.1%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>FYC</td>
+            <td class="ca-cell" onclick="copyCA('EnPANkfatLeou1A7785qYREghWiGx6Xxh4TJnn43pump')">EnPANk...pump</td>
+            <td>01/05 01:23</td>
+            <td>01/05 01:25</td>
+            <td>2m</td>
+            <td>$21,063</td>
+            <td>$21,533</td>
+            <td class="profit">+2%</td>
+            <td>419m</td>
+            <td>339</td>
+            <td class="profit">$10.04</td>
+            <td class="profit">5.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>JESTER</td>
+            <td class="ca-cell" onclick="copyCA('6WdHhpRY7vL8SQ69bd89tAj3sk8jsjBrCLDUTZSNpump')">6WdHhp...pump</td>
+            <td>01/05 01:07</td>
+            <td>01/05 01:54</td>
+            <td>48m</td>
+            <td>$67,872</td>
+            <td>$70,265</td>
+            <td class="profit">+4%</td>
+            <td>27458m</td>
+            <td>347</td>
+            <td class="profit">$10.01</td>
+            <td class="profit">4.9%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>GOLDWHALE</td>
+            <td class="ca-cell" onclick="copyCA('9JHgFj8GFsenCTykDSeKuZKkvaEuair9tCErrgc7pump')">9JHgFj...pump</td>
+            <td>01/05 06:25</td>
+            <td>01/05 06:30</td>
+            <td>5m</td>
+            <td>$7,141</td>
+            <td>$7,110</td>
+            <td class="loss">-0%</td>
+            <td>9739m</td>
+            <td>530</td>
+            <td class="profit">$9.91</td>
+            <td class="profit">4.9%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>FYC</td>
+            <td class="ca-cell" onclick="copyCA('EnPANkfatLeou1A7785qYREghWiGx6Xxh4TJnn43pump')">EnPANk...pump</td>
+            <td>01/05 06:10</td>
+            <td>01/05 06:15</td>
+            <td>5m</td>
+            <td>$8,638</td>
+            <td>$8,786</td>
+            <td class="profit">+2%</td>
+            <td>706m</td>
+            <td>200</td>
+            <td class="profit">$9.81</td>
+            <td class="profit">4.8%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Brick</td>
+            <td class="ca-cell" onclick="copyCA('7jfGSYYMZktd18sLzmAycLLvTxyrkvskQ8rivAMmpump')">7jfGSY...pump</td>
+            <td>01/05 02:11</td>
+            <td>01/05 02:25</td>
+            <td>14m</td>
+            <td>$24,198</td>
+            <td>$24,358</td>
+            <td class="profit">+1%</td>
+            <td>1458m</td>
+            <td>156</td>
+            <td class="profit">$9.39</td>
+            <td class="profit">4.6%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>bojak</td>
+            <td class="ca-cell" onclick="copyCA('DjxJzWa4hSVJLmcmmQkcKJU6iEXLK5ESpmw6sWhopump')">DjxJzW...pump</td>
+            <td>01/05 03:38</td>
+            <td>01/05 03:45</td>
+            <td>7m</td>
+            <td>$57,712</td>
+            <td>$58,988</td>
+            <td class="profit">+2%</td>
+            <td>7158m</td>
+            <td>1464</td>
+            <td class="profit">$9.30</td>
+            <td class="profit">4.6%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>dollar</td>
+            <td class="ca-cell" onclick="copyCA('357FS9twDuFKtJ3DiVMaJCFdmi6xLAENyNricvUapump')">357FS9...pump</td>
+            <td>01/05 00:03</td>
+            <td>01/05 00:06</td>
+            <td>2m</td>
+            <td>$6,065</td>
+            <td>$6,105</td>
+            <td class="profit">+1%</td>
+            <td>768m</td>
+            <td>225</td>
+            <td class="profit">$9.27</td>
+            <td class="profit">4.6%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>GREAT</td>
+            <td class="ca-cell" onclick="copyCA('4fBTvktD3uBp74sGQQB2WFjRnSfayHbWDfPoxjWEpump')">4fBTvk...pump</td>
+            <td>01/05 08:12</td>
+            <td>01/05 08:42</td>
+            <td>31m</td>
+            <td>$63,539</td>
+            <td>$81,595</td>
+            <td class="profit">+28%</td>
+            <td>256m</td>
+            <td>600</td>
+            <td class="profit">$9.08</td>
+            <td class="profit">4.5%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>unicorn</td>
+            <td class="ca-cell" onclick="copyCA('CrNchbhLnu4CzEjuc8uoxwFcaBgAYvY7RCf1vSm1pump')">CrNchb...pump</td>
+            <td>01/05 01:09</td>
+            <td>01/05 02:44</td>
+            <td>95m</td>
+            <td>$38,684</td>
+            <td>$39,695</td>
+            <td class="profit">+3%</td>
+            <td>6102m</td>
+            <td>1194</td>
+            <td class="profit">$8.99</td>
+            <td class="profit">4.4%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Few</td>
+            <td class="ca-cell" onclick="copyCA('EH3taj1hfXdRPt1bFZ7MinfvTo31i8tLcyp4biNEpump')">EH3taj...pump</td>
+            <td>01/05 06:29</td>
+            <td>01/05 06:43</td>
+            <td>14m</td>
+            <td>$6,721</td>
+            <td>$6,720</td>
+            <td class="loss">-0%</td>
+            <td>206m</td>
+            <td>199</td>
+            <td class="profit">$8.63</td>
+            <td class="profit">4.3%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>BOWL</td>
+            <td class="ca-cell" onclick="copyCA('GGjSyw7a11ZXvVTt163NYUv3HMfv5iscgY8Z3Wyhpump')">GGjSyw...pump</td>
+            <td>01/05 03:48</td>
+            <td>01/05 03:55</td>
+            <td>7m</td>
+            <td>$33,048</td>
+            <td>$33,702</td>
+            <td class="profit">+2%</td>
+            <td>199m</td>
+            <td>329</td>
+            <td class="profit">$8.58</td>
+            <td class="profit">4.2%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>MOON</td>
+            <td class="ca-cell" onclick="copyCA('DZ1fC3aiobpYEe621jaCHX4Dr83n4Pv44fiikZY2pump')">DZ1fC3...pump</td>
+            <td>01/05 05:01</td>
+            <td>01/05 05:11</td>
+            <td>10m</td>
+            <td>$83,818</td>
+            <td>$85,138</td>
+            <td class="profit">+2%</td>
+            <td>264m</td>
+            <td>466</td>
+            <td class="profit">$8.17</td>
+            <td class="profit">4.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>SOLBISCUIT</td>
+            <td class="ca-cell" onclick="copyCA('J3mTHLJ3GMcz9ycfvUji5HzeuTvmUQjQSdzChsS5pump')">J3mTHL...pump</td>
+            <td>01/05 06:05</td>
+            <td>01/05 06:24</td>
+            <td>19m</td>
+            <td>$49,869</td>
+            <td>$49,948</td>
+            <td class="profit">+0%</td>
+            <td>6539m</td>
+            <td>313</td>
+            <td class="profit">$7.97</td>
+            <td class="profit">3.9%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>TRAX </td>
+            <td class="ca-cell" onclick="copyCA('Dk2pDpyS1H6S5TCv3Afx8bmxJb1XbsWBJbReXtjipump')">Dk2pDp...pump</td>
+            <td>01/05 01:18</td>
+            <td>01/05 01:40</td>
+            <td>21m</td>
+            <td>$109,394</td>
+            <td>$111,585</td>
+            <td class="profit">+2%</td>
+            <td>2588m</td>
+            <td>913</td>
+            <td class="profit">$7.82</td>
+            <td class="profit">3.9%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Mia</td>
+            <td class="ca-cell" onclick="copyCA('FyPDfX92B4uEk4zZouy96d1Kk1LgnCznBpzAFSsZpump')">FyPDfX...pump</td>
+            <td>01/05 07:47</td>
+            <td>01/05 07:56</td>
+            <td>9m</td>
+            <td>$304,265</td>
+            <td>$312,680</td>
+            <td class="profit">+3%</td>
+            <td>1118m</td>
+            <td>1133</td>
+            <td class="profit">$7.55</td>
+            <td class="profit">3.7%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>LAUNCHLAB</td>
+            <td class="ca-cell" onclick="copyCA('5wT9K2qfSGgfU8piHA5an51YBE5wZUNzczH3ipyYpump')">5wT9K2...pump</td>
+            <td>01/05 01:50</td>
+            <td>01/05 01:57</td>
+            <td>7m</td>
+            <td>$139,778</td>
+            <td>$144,123</td>
+            <td class="profit">+3%</td>
+            <td>403m</td>
+            <td>981</td>
+            <td class="profit">$7.35</td>
+            <td class="profit">3.6%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>VCASH</td>
+            <td class="ca-cell" onclick="copyCA('BWdwwcAJarHt9JtgSgPgFJG1eEcd3vSn9j9DnQKqpump')">BWdwwc...pump</td>
+            <td>01/05 02:56</td>
+            <td>01/05 02:59</td>
+            <td>2m</td>
+            <td>$136,183</td>
+            <td>$138,866</td>
+            <td class="profit">+2%</td>
+            <td>294m</td>
+            <td>547</td>
+            <td class="profit">$7.28</td>
+            <td class="profit">3.6%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Mia</td>
+            <td class="ca-cell" onclick="copyCA('DhHFXFYWiRHV3yZHGUsEd3GPqLmwUCjAwX1mVAubpump')">DhHFXF...pump</td>
+            <td>01/05 08:39</td>
+            <td>01/05 08:46</td>
+            <td>7m</td>
+            <td>$13,834</td>
+            <td>$13,831</td>
+            <td class="loss">-0%</td>
+            <td>363m</td>
+            <td>190</td>
+            <td class="profit">$7.04</td>
+            <td class="profit">3.5%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>polypin</td>
+            <td class="ca-cell" onclick="copyCA('6PXfpeCEPmunReF9RQcUECt539dEtCZH2Cs4eMmApump')">6PXfpe...pump</td>
+            <td>01/05 04:31</td>
+            <td>01/05 04:36</td>
+            <td>5m</td>
+            <td>$88,901</td>
+            <td>$86,702</td>
+            <td class="loss">-2%</td>
+            <td>17620m</td>
+            <td>444</td>
+            <td class="profit">$6.52</td>
+            <td class="profit">3.2%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>VCASH</td>
+            <td class="ca-cell" onclick="copyCA('BWdwwcAJarHt9JtgSgPgFJG1eEcd3vSn9j9DnQKqpump')">BWdwwc...pump</td>
+            <td>01/05 04:57</td>
+            <td>01/05 05:21</td>
+            <td>24m</td>
+            <td>$139,214</td>
+            <td>$139,272</td>
+            <td class="profit">+0%</td>
+            <td>415m</td>
+            <td>616</td>
+            <td class="profit">$6.48</td>
+            <td class="profit">3.2%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>json</td>
+            <td class="ca-cell" onclick="copyCA('DP97WVT3RaQBZS2nYfnq99agzqP3czkS8MxEk4gFpump')">DP97WV...pump</td>
+            <td>01/05 05:27</td>
+            <td>01/05 06:07</td>
+            <td>40m</td>
+            <td>$73,705</td>
+            <td>$50,075</td>
+            <td class="loss">-32%</td>
+            <td>311m</td>
+            <td>629</td>
+            <td class="profit">$6.21</td>
+            <td class="profit">3.1%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>SHIP</td>
+            <td class="ca-cell" onclick="copyCA('GufpyNT1dFdM45fXmdW25RR5DQXyVXFGS8v6syMbWFeE')">GufpyN...WFeE</td>
+            <td>01/05 05:39</td>
+            <td>01/05 06:14</td>
+            <td>36m</td>
+            <td>$250,752</td>
+            <td>$254,352</td>
+            <td class="profit">+1%</td>
+            <td>3204m</td>
+            <td>418</td>
+            <td class="profit">$6.11</td>
+            <td class="profit">3.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>BOWL</td>
+            <td class="ca-cell" onclick="copyCA('86PtAo1z8th9tgv1BhgLiyuE91tWokUXhBCc5aLGpump')">86PtAo...pump</td>
+            <td>01/05 06:59</td>
+            <td>01/05 08:06</td>
+            <td>66m</td>
+            <td>$20,459</td>
+            <td>$20,447</td>
+            <td class="loss">-0%</td>
+            <td>356m</td>
+            <td>296</td>
+            <td class="profit">$5.65</td>
+            <td class="profit">2.8%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Oilcoin</td>
+            <td class="ca-cell" onclick="copyCA('RN4LQdSmaYkCKNnrN8eFjGZ9tUUPN6nriEdpCF74oiL')">RN4LQd...4oiL</td>
+            <td>01/05 02:23</td>
+            <td>01/05 02:28</td>
+            <td>5m</td>
+            <td>$16,052</td>
+            <td>$15,534</td>
+            <td class="loss">-3%</td>
+            <td>947m</td>
+            <td>270</td>
+            <td class="profit">$5.48</td>
+            <td class="profit">2.7%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Mia</td>
+            <td class="ca-cell" onclick="copyCA('FyPDfX92B4uEk4zZouy96d1Kk1LgnCznBpzAFSsZpump')">FyPDfX...pump</td>
+            <td>01/05 03:21</td>
+            <td>01/05 03:35</td>
+            <td>14m</td>
+            <td>$230,405</td>
+            <td>$242,105</td>
+            <td class="profit">+5%</td>
+            <td>852m</td>
+            <td>1053</td>
+            <td class="profit">$4.94</td>
+            <td class="profit">2.4%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>json</td>
+            <td class="ca-cell" onclick="copyCA('DP97WVT3RaQBZS2nYfnq99agzqP3czkS8MxEk4gFpump')">DP97WV...pump</td>
+            <td>01/05 05:08</td>
+            <td>01/05 05:30</td>
+            <td>21m</td>
+            <td>$61,782</td>
+            <td>$73,771</td>
+            <td class="profit">+19%</td>
+            <td>292m</td>
+            <td>627</td>
+            <td class="profit">$4.87</td>
+            <td class="profit">2.4%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>ERIKA</td>
+            <td class="ca-cell" onclick="copyCA('2gvqJi4y4SFyTH3drLbPrCSgZfTYtcqKGqxzvdtApump')">2gvqJi...pump</td>
+            <td>01/05 07:28</td>
+            <td>01/05 08:21</td>
+            <td>52m</td>
+            <td>$11,765</td>
+            <td>$11,676</td>
+            <td class="loss">-1%</td>
+            <td>16203m</td>
+            <td>159</td>
+            <td class="profit">$4.67</td>
+            <td class="profit">2.3%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>KREDO</td>
+            <td class="ca-cell" onclick="copyCA('F2hgieC18MeUWaWMoyaxLSQCzS7yAjRz1HgmbGAEpump')">F2hgie...pump</td>
+            <td>01/05 03:45</td>
+            <td>01/05 04:37</td>
+            <td>52m</td>
+            <td>$378,372</td>
+            <td>$379,962</td>
+            <td class="profit">+0%</td>
+            <td>4724m</td>
+            <td>615</td>
+            <td class="profit">$4.17</td>
+            <td class="profit">2.1%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>MOON</td>
+            <td class="ca-cell" onclick="copyCA('DZ1fC3aiobpYEe621jaCHX4Dr83n4Pv44fiikZY2pump')">DZ1fC3...pump</td>
+            <td>01/05 06:10</td>
+            <td>01/05 06:15</td>
+            <td>5m</td>
+            <td>$108,865</td>
+            <td>N/A</td>
+            <td class="loss">+0%</td>
+            <td>333m</td>
+            <td>550</td>
+            <td class="profit">$3.59</td>
+            <td class="profit">1.8%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>json</td>
+            <td class="ca-cell" onclick="copyCA('DP97WVT3RaQBZS2nYfnq99agzqP3czkS8MxEk4gFpump')">DP97WV...pump</td>
+            <td>01/05 02:39</td>
+            <td>01/05 03:07</td>
+            <td>29m</td>
+            <td>$34,763</td>
+            <td>$66,813</td>
+            <td class="profit">+92%</td>
+            <td>143m</td>
+            <td>594</td>
+            <td class="profit">$2.97</td>
+            <td class="profit">1.5%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>PolarBear</td>
+            <td class="ca-cell" onclick="copyCA('yf1xw3TZ8ZLbmdYHDW6QEg5bcbKRpP3QNNhqPv5pump')">yf1xw3...pump</td>
+            <td>01/04 23:43</td>
+            <td>01/05 01:56</td>
+            <td>133m</td>
+            <td>$7,054</td>
+            <td>$6,778</td>
+            <td class="loss">-4%</td>
+            <td>7093m</td>
+            <td>145</td>
+            <td class="profit">$2.87</td>
+            <td class="profit">1.4%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>BWHALE</td>
+            <td class="ca-cell" onclick="copyCA('34nevDsJsKjWHCuRGiDTZ6K3BSEudJuyUM4dJH2npump')">34nevD...pump</td>
+            <td>01/05 06:19</td>
+            <td>01/05 06:54</td>
+            <td>35m</td>
+            <td>$21,712</td>
+            <td>$21,390</td>
+            <td class="loss">-1%</td>
+            <td>15736m</td>
+            <td>375</td>
+            <td class="profit">$2.71</td>
+            <td class="profit">1.3%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>交易猫</td>
+            <td class="ca-cell" onclick="copyCA('Gysp4iZ6uNuAksAPR37fQwLDRFU9Rz255UjExhiwpump')">Gysp4i...pump</td>
+            <td>01/05 00:47</td>
+            <td>01/05 00:52</td>
+            <td>5m</td>
+            <td>$107,993</td>
+            <td>$107,416</td>
+            <td class="loss">-1%</td>
+            <td>849m</td>
+            <td>1592</td>
+            <td class="profit">$2.42</td>
+            <td class="profit">1.2%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>gm</td>
+            <td class="ca-cell" onclick="copyCA('9RaBDMwL2hcmah5yzXjBLiiYxHiBbd2jSEH3q6KCpump')">9RaBDM...pump</td>
+            <td>01/05 05:17</td>
+            <td>01/05 05:29</td>
+            <td>12m</td>
+            <td>$1,040,342</td>
+            <td>$1,035,829</td>
+            <td class="loss">-0%</td>
+            <td>14546m</td>
+            <td>800</td>
+            <td class="profit">$2.39</td>
+            <td class="profit">1.2%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>k8o5</td>
+            <td class="ca-cell" onclick="copyCA('3FkfFXtMDVkKJ6SAouMSK4qYFmErYxSnAUx6vP52pump')">3FkfFX...pump</td>
+            <td>01/05 06:07</td>
+            <td>01/05 06:12</td>
+            <td>5m</td>
+            <td>$49,035</td>
+            <td>$48,557</td>
+            <td class="loss">-1%</td>
+            <td>2028m</td>
+            <td>247</td>
+            <td class="profit">$2.36</td>
+            <td class="profit">1.2%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>meme</td>
+            <td class="ca-cell" onclick="copyCA('85ymfLLfeyYA9wV1PorpLBW1pprWfPgnm3cMEx5ppump')">85ymfL...pump</td>
+            <td>01/05 03:26</td>
+            <td>01/05 04:30</td>
+            <td>64m</td>
+            <td>$631,734</td>
+            <td>$716,695</td>
+            <td class="profit">+13%</td>
+            <td>1376m</td>
+            <td>2673</td>
+            <td class="profit">$2.26</td>
+            <td class="profit">1.1%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>INUF</td>
+            <td class="ca-cell" onclick="copyCA('5885ru69zduER1X1AfzVbKVZxJhH67XfAYkRPKWJpump')">5885ru...pump</td>
+            <td>01/05 01:48</td>
+            <td>01/05 02:00</td>
+            <td>12m</td>
+            <td>$75,053</td>
+            <td>$75,659</td>
+            <td class="profit">+1%</td>
+            <td>52m</td>
+            <td>517</td>
+            <td class="profit">$2.11</td>
+            <td class="profit">1.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>BlackWhale</td>
+            <td class="ca-cell" onclick="copyCA('J96qn3bFy6RReiGrzedDX8nakaLtZKhYbtx3Cpk4pump')">J96qn3...pump</td>
+            <td>01/05 05:40</td>
+            <td>01/05 06:25</td>
+            <td>45m</td>
+            <td>$10,580</td>
+            <td>$10,416</td>
+            <td class="loss">-2%</td>
+            <td>11077m</td>
+            <td>165</td>
+            <td class="profit">$1.98</td>
+            <td class="profit">1.0%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Sipping</td>
+            <td class="ca-cell" onclick="copyCA('GpYzsoASKnNtkNo2zQMAMwrg76XoT76rqBRfHEoZpump')">GpYzso...pump</td>
+            <td>01/05 00:53</td>
+            <td>01/05 01:05</td>
+            <td>12m</td>
+            <td>$65,481</td>
+            <td>N/A</td>
+            <td class="loss">+0%</td>
+            <td>3027m</td>
+            <td>280</td>
+            <td class="profit">$1.52</td>
+            <td class="profit">0.8%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>交易猫</td>
+            <td class="ca-cell" onclick="copyCA('Gysp4iZ6uNuAksAPR37fQwLDRFU9Rz255UjExhiwpump')">Gysp4i...pump</td>
+            <td>01/04 23:39</td>
+            <td>01/04 23:48</td>
+            <td>10m</td>
+            <td>$84,353</td>
+            <td>$83,492</td>
+            <td class="loss">-1%</td>
+            <td>780m</td>
+            <td>1658</td>
+            <td class="profit">$1.21</td>
+            <td class="profit">0.6%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>dollar</td>
+            <td class="ca-cell" onclick="copyCA('357FS9twDuFKtJ3DiVMaJCFdmi6xLAENyNricvUapump')">357FS9...pump</td>
+            <td>01/05 06:16</td>
+            <td>01/05 07:23</td>
+            <td>66m</td>
+            <td>$5,224</td>
+            <td>$5,029</td>
+            <td class="loss">-4%</td>
+            <td>1141m</td>
+            <td>201</td>
+            <td class="profit">$0.83</td>
+            <td class="profit">0.4%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="profit-row">
+            <td>Oilcoin</td>
+            <td class="ca-cell" onclick="copyCA('RN4LQdSmaYkCKNnrN8eFjGZ9tUUPN6nriEdpCF74oiL')">RN4LQd...4oiL</td>
+            <td>01/05 00:18</td>
+            <td>01/05 00:22</td>
+            <td>5m</td>
+            <td>$18,571</td>
+            <td>$18,149</td>
+            <td class="loss">-2%</td>
+            <td>821m</td>
+            <td>264</td>
+            <td class="profit">$0.71</td>
+            <td class="profit">0.4%</td>
+            <td>✅</td>
+        </tr>
+        <tr class="loss-row">
+            <td>honse</td>
+            <td class="ca-cell" onclick="copyCA('5zqU5eUPkbuBsWLSBoc7Qnf7DS8xDrLneWEPAAigpump')">5zqU5e...pump</td>
+            <td>01/05 05:33</td>
+            <td>01/05 07:46</td>
+            <td>133m</td>
+            <td>$32,529</td>
+            <td>$32,133</td>
+            <td class="loss">-1%</td>
+            <td>17076m</td>
+            <td>753</td>
+            <td class="loss">$-0.01</td>
+            <td class="loss">-0.0%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Grokrot</td>
+            <td class="ca-cell" onclick="copyCA('BPC8L5UUFJpS5RHQHwnhhx3aSqZEeyPADpFNkcvTpump')">BPC8L5...pump</td>
+            <td>01/05 08:36</td>
+            <td>01/05 08:43</td>
+            <td>7m</td>
+            <td>$5,002</td>
+            <td>$4,831</td>
+            <td class="loss">-3%</td>
+            <td>2818m</td>
+            <td>196</td>
+            <td class="loss">$-0.11</td>
+            <td class="loss">-0.1%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>you</td>
+            <td class="ca-cell" onclick="copyCA('BvkPHKx2QKMbWgo1gT2R9FemF1BvYhv2ufcmeMydrciu')">BvkPHK...rciu</td>
+            <td>01/05 08:02</td>
+            <td>01/05 09:09</td>
+            <td>66m</td>
+            <td>$49,681</td>
+            <td>$48,366</td>
+            <td class="loss">-3%</td>
+            <td>10308m</td>
+            <td>490</td>
+            <td class="loss">$-0.40</td>
+            <td class="loss">-0.2%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>5</td>
+            <td class="ca-cell" onclick="copyCA('6JCxJiUbPWVrr36Fftk5JqCcirMV6yJSGdyegAXypump')">6JCxJi...pump</td>
+            <td>01/05 03:30</td>
+            <td>01/05 05:43</td>
+            <td>133m</td>
+            <td>$4,442</td>
+            <td>$4,322</td>
+            <td class="loss">-3%</td>
+            <td>10188m</td>
+            <td>247</td>
+            <td class="loss">$-0.42</td>
+            <td class="loss">-0.2%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>VCASH</td>
+            <td class="ca-cell" onclick="copyCA('BWdwwcAJarHt9JtgSgPgFJG1eEcd3vSn9j9DnQKqpump')">BWdwwc...pump</td>
+            <td>01/05 03:46</td>
+            <td>01/05 03:51</td>
+            <td>5m</td>
+            <td>$218,758</td>
+            <td>$214,756</td>
+            <td class="loss">-2%</td>
+            <td>344m</td>
+            <td>599</td>
+            <td class="loss">$-0.46</td>
+            <td class="loss">-0.2%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Mia</td>
+            <td class="ca-cell" onclick="copyCA('DhHFXFYWiRHV3yZHGUsEd3GPqLmwUCjAwX1mVAubpump')">DhHFXF...pump</td>
+            <td>01/05 07:33</td>
+            <td>01/05 08:32</td>
+            <td>59m</td>
+            <td>$12,188</td>
+            <td>$11,772</td>
+            <td class="loss">-3%</td>
+            <td>297m</td>
+            <td>188</td>
+            <td class="loss">$-0.55</td>
+            <td class="loss">-0.3%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>VCASH</td>
+            <td class="ca-cell" onclick="copyCA('BWdwwcAJarHt9JtgSgPgFJG1eEcd3vSn9j9DnQKqpump')">BWdwwc...pump</td>
+            <td>01/05 00:27</td>
+            <td>01/05 00:31</td>
+            <td>5m</td>
+            <td>$183,781</td>
+            <td>$185,680</td>
+            <td class="profit">+1%</td>
+            <td>145m</td>
+            <td>503</td>
+            <td class="loss">$-0.89</td>
+            <td class="loss">-0.4%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>meme</td>
+            <td class="ca-cell" onclick="copyCA('3mRdAwMrgikR5Qnn2TLwjfZzcNfBA2tvv2nv4GhDpump')">3mRdAw...pump</td>
+            <td>01/05 00:43</td>
+            <td>01/05 02:37</td>
+            <td>114m</td>
+            <td>$33,272</td>
+            <td>N/A</td>
+            <td class="loss">+0%</td>
+            <td>1089m</td>
+            <td>419</td>
+            <td class="loss">$-1.78</td>
+            <td class="loss">-0.9%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>MINE</td>
+            <td class="ca-cell" onclick="copyCA('Co7pyy84biZZiD4sS8Q8rPt8u36du7JvEQuWrFNApump')">Co7pyy...pump</td>
+            <td>01/05 00:06</td>
+            <td>01/05 00:13</td>
+            <td>7m</td>
+            <td>$39,302</td>
+            <td>$37,048</td>
+            <td class="loss">-6%</td>
+            <td>100m</td>
+            <td>496</td>
+            <td class="loss">$-1.83</td>
+            <td class="loss">-0.9%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>VCASH</td>
+            <td class="ca-cell" onclick="copyCA('BWdwwcAJarHt9JtgSgPgFJG1eEcd3vSn9j9DnQKqpump')">BWdwwc...pump</td>
+            <td>01/05 04:48</td>
+            <td>01/05 04:55</td>
+            <td>7m</td>
+            <td>$158,169</td>
+            <td>$154,556</td>
+            <td class="loss">-2%</td>
+            <td>406m</td>
+            <td>615</td>
+            <td class="loss">$-1.93</td>
+            <td class="loss">-1.0%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>json</td>
+            <td class="ca-cell" onclick="copyCA('DP97WVT3RaQBZS2nYfnq99agzqP3czkS8MxEk4gFpump')">DP97WV...pump</td>
+            <td>01/05 02:58</td>
+            <td>01/05 04:47</td>
+            <td>109m</td>
+            <td>$66,813</td>
+            <td>$110,440</td>
+            <td class="profit">+65%</td>
+            <td>162m</td>
+            <td>603</td>
+            <td class="loss">$-1.93</td>
+            <td class="loss">-1.0%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Madurofy</td>
+            <td class="ca-cell" onclick="copyCA('FHs4uu5Lrsq4UFY18FVHP2L1C7CaUbJDtbJFPre5pump')">FHs4uu...pump</td>
+            <td>01/05 05:57</td>
+            <td>01/05 06:04</td>
+            <td>7m</td>
+            <td>$3,670</td>
+            <td>$3,480</td>
+            <td class="loss">-5%</td>
+            <td>1727m</td>
+            <td>167</td>
+            <td class="loss">$-2.02</td>
+            <td class="loss">-1.0%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>USD0</td>
+            <td class="ca-cell" onclick="copyCA('3FLRqdMrk9ARFosNejqEKMveum6hWhNMqZysAqKcTq2q')">3FLRqd...Tq2q</td>
+            <td>01/05 08:12</td>
+            <td>01/05 08:17</td>
+            <td>5m</td>
+            <td>$10,369</td>
+            <td>$9,940</td>
+            <td class="loss">-4%</td>
+            <td>2733m</td>
+            <td>137</td>
+            <td class="loss">$-2.30</td>
+            <td class="loss">-1.1%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>TRAX </td>
+            <td class="ca-cell" onclick="copyCA('Dk2pDpyS1H6S5TCv3Afx8bmxJb1XbsWBJbReXtjipump')">Dk2pDp...pump</td>
+            <td>01/05 02:34</td>
+            <td>01/05 03:05</td>
+            <td>31m</td>
+            <td>$98,092</td>
+            <td>$95,249</td>
+            <td class="loss">-3%</td>
+            <td>2664m</td>
+            <td>905</td>
+            <td class="loss">$-2.31</td>
+            <td class="loss">-1.1%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>maxxing</td>
+            <td class="ca-cell" onclick="copyCA('32CdQdBUxbCsLy5AUHWmyidfwhgGUr9N573NBUrDpump')">32CdQd...pump</td>
+            <td>01/05 07:21</td>
+            <td>01/05 07:59</td>
+            <td>38m</td>
+            <td>$300,027</td>
+            <td>$290,484</td>
+            <td class="loss">-3%</td>
+            <td>49334m</td>
+            <td>917</td>
+            <td class="loss">$-2.39</td>
+            <td class="loss">-1.2%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Mia</td>
+            <td class="ca-cell" onclick="copyCA('DhHFXFYWiRHV3yZHGUsEd3GPqLmwUCjAwX1mVAubpump')">DhHFXF...pump</td>
+            <td>01/05 03:14</td>
+            <td>01/05 03:19</td>
+            <td>5m</td>
+            <td>N/A</td>
+            <td>$54,144</td>
+            <td class="loss">+0%</td>
+            <td>0m</td>
+            <td>0</td>
+            <td class="loss">$-2.48</td>
+            <td class="loss">-1.2%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>GookWhale</td>
+            <td class="ca-cell" onclick="copyCA('9i3Mf9bD24N34Ecrbpj6vcdN6eMyK1ohHm8Hq6a2pump')">9i3Mf9...pump</td>
+            <td>01/05 05:46</td>
+            <td>01/05 06:40</td>
+            <td>55m</td>
+            <td>$7,229</td>
+            <td>$6,984</td>
+            <td class="loss">-3%</td>
+            <td>12589m</td>
+            <td>200</td>
+            <td class="loss">$-2.49</td>
+            <td class="loss">-1.2%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>r0ko</td>
+            <td class="ca-cell" onclick="copyCA('BpW5jkzNXeCkD9Vux3C8zyusKuHWNnqNcDkDYpgwpump')">BpW5jk...pump</td>
+            <td>01/05 02:11</td>
+            <td>01/05 02:21</td>
+            <td>10m</td>
+            <td>$43,007</td>
+            <td>$41,188</td>
+            <td class="loss">-4%</td>
+            <td>2773m</td>
+            <td>328</td>
+            <td class="loss">$-2.52</td>
+            <td class="loss">-1.2%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Nicolas</td>
+            <td class="ca-cell" onclick="copyCA('GcXnZ64TJpqWokGbF6BgrxT4UHRbZ9ZyCiY9rYYFpump')">GcXnZ6...pump</td>
+            <td>01/05 06:49</td>
+            <td>01/05 07:41</td>
+            <td>52m</td>
+            <td>$12,185</td>
+            <td>$11,790</td>
+            <td class="loss">-3%</td>
+            <td>1898m</td>
+            <td>370</td>
+            <td class="loss">$-3.06</td>
+            <td class="loss">-1.5%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>SAMP</td>
+            <td class="ca-cell" onclick="copyCA('J71AgRub9pP4ygJSJx72TugQ46B7TWscT7WmcjBbpump')">J71AgR...pump</td>
+            <td>01/05 06:48</td>
+            <td>01/05 06:55</td>
+            <td>7m</td>
+            <td>$14,257</td>
+            <td>$13,544</td>
+            <td class="loss">-5%</td>
+            <td>1810m</td>
+            <td>207</td>
+            <td class="loss">$-3.17</td>
+            <td class="loss">-1.6%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>INDIVIDUAL</td>
+            <td class="ca-cell" onclick="copyCA('8yqXSNEThU9SUfpygwSssdHx1kcYPexDusnsRi4zpump')">8yqXSN...pump</td>
+            <td>01/05 00:25</td>
+            <td>01/05 00:30</td>
+            <td>5m</td>
+            <td>$42,755</td>
+            <td>$41,181</td>
+            <td class="loss">-4%</td>
+            <td>2616m</td>
+            <td>273</td>
+            <td class="loss">$-3.17</td>
+            <td class="loss">-1.6%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Yumeko</td>
+            <td class="ca-cell" onclick="copyCA('4SdYhmnXs8ig3HM5gHd2h1TYLL7ZhNckR55njCA7pump')">4SdYhm...pump</td>
+            <td>01/05 08:19</td>
+            <td>01/05 08:28</td>
+            <td>10m</td>
+            <td>$7,175</td>
+            <td>$6,598</td>
+            <td class="loss">-8%</td>
+            <td>9012m</td>
+            <td>128</td>
+            <td class="loss">$-3.21</td>
+            <td class="loss">-1.6%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Bobo Show</td>
+            <td class="ca-cell" onclick="copyCA('ZdBMPxmwBrHvMKY4d4KbDjycDEhfeiaFfHjF13epump')">ZdBMPx...pump</td>
+            <td>01/05 00:20</td>
+            <td>01/05 00:27</td>
+            <td>7m</td>
+            <td>$33,614</td>
+            <td>$32,464</td>
+            <td class="loss">-3%</td>
+            <td>21406m</td>
+            <td>287</td>
+            <td class="loss">$-3.22</td>
+            <td class="loss">-1.6%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>TRAX </td>
+            <td class="ca-cell" onclick="copyCA('Dk2pDpyS1H6S5TCv3Afx8bmxJb1XbsWBJbReXtjipump')">Dk2pDp...pump</td>
+            <td>01/05 08:16</td>
+            <td>01/05 08:21</td>
+            <td>5m</td>
+            <td>$147,226</td>
+            <td>$141,706</td>
+            <td class="loss">-4%</td>
+            <td>3006m</td>
+            <td>860</td>
+            <td class="loss">$-3.47</td>
+            <td class="loss">-1.7%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Bobo Show</td>
+            <td class="ca-cell" onclick="copyCA('ZdBMPxmwBrHvMKY4d4KbDjycDEhfeiaFfHjF13epump')">ZdBMPx...pump</td>
+            <td>01/05 03:34</td>
+            <td>01/05 03:46</td>
+            <td>12m</td>
+            <td>$62,523</td>
+            <td>$59,961</td>
+            <td class="loss">-4%</td>
+            <td>21600m</td>
+            <td>317</td>
+            <td class="loss">$-4.06</td>
+            <td class="loss">-2.0%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>GRANNY</td>
+            <td class="ca-cell" onclick="copyCA('8s4Cziwa2EdeZP5ySHCSkSmsLJaGfD2U1SpxVoC4pump')">8s4Czi...pump</td>
+            <td>01/05 00:56</td>
+            <td>01/05 03:09</td>
+            <td>133m</td>
+            <td>$3,847</td>
+            <td>$4,008</td>
+            <td class="profit">+4%</td>
+            <td>4751m</td>
+            <td>79</td>
+            <td class="loss">$-4.41</td>
+            <td class="loss">-2.2%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>r0ko</td>
+            <td class="ca-cell" onclick="copyCA('BpW5jkzNXeCkD9Vux3C8zyusKuHWNnqNcDkDYpgwpump')">BpW5jk...pump</td>
+            <td>01/05 03:32</td>
+            <td>01/05 03:53</td>
+            <td>21m</td>
+            <td>$37,466</td>
+            <td>$35,596</td>
+            <td class="loss">-5%</td>
+            <td>2854m</td>
+            <td>326</td>
+            <td class="loss">$-5.57</td>
+            <td class="loss">-2.8%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>GAPE</td>
+            <td class="ca-cell" onclick="copyCA('Ha7qJnutwXf92jnVckvtKjC9s4R12UXYh4qUWo5Rpump')">Ha7qJn...pump</td>
+            <td>01/05 06:37</td>
+            <td>01/05 08:50</td>
+            <td>133m</td>
+            <td>$11,893</td>
+            <td>$11,278</td>
+            <td class="loss">-5%</td>
+            <td>5133m</td>
+            <td>151</td>
+            <td class="loss">$-5.59</td>
+            <td class="loss">-2.8%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Mia</td>
+            <td class="ca-cell" onclick="copyCA('FyPDfX92B4uEk4zZouy96d1Kk1LgnCznBpzAFSsZpump')">FyPDfX...pump</td>
+            <td>01/05 08:06</td>
+            <td>01/05 08:36</td>
+            <td>31m</td>
+            <td>$278,555</td>
+            <td>$266,886</td>
+            <td class="loss">-4%</td>
+            <td>1137m</td>
+            <td>1146</td>
+            <td class="loss">$-5.91</td>
+            <td class="loss">-2.9%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>DINO</td>
+            <td class="ca-cell" onclick="copyCA('85sG3Z6N1BQkm7A8vBWnN2RJLNVnnC1kwP7LZyzWpump')">85sG3Z...pump</td>
+            <td>01/05 06:55</td>
+            <td>01/05 07:40</td>
+            <td>45m</td>
+            <td>$7,368</td>
+            <td>$6,869</td>
+            <td class="loss">-7%</td>
+            <td>8108m</td>
+            <td>229</td>
+            <td class="loss">$-6.18</td>
+            <td class="loss">-3.1%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>HEY</td>
+            <td class="ca-cell" onclick="copyCA('H5ZzNEA3WhHNqcLSHXTT2gxfH88n16GmMtDhMwpxpump')">H5ZzNE...pump</td>
+            <td>01/05 00:36</td>
+            <td>01/05 01:42</td>
+            <td>67m</td>
+            <td>$48,963</td>
+            <td>$45,237</td>
+            <td class="loss">-8%</td>
+            <td>8314m</td>
+            <td>922</td>
+            <td class="loss">$-6.20</td>
+            <td class="loss">-3.1%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>you</td>
+            <td class="ca-cell" onclick="copyCA('BvkPHKx2QKMbWgo1gT2R9FemF1BvYhv2ufcmeMydrciu')">BvkPHK...rciu</td>
+            <td>01/04 23:46</td>
+            <td>01/04 23:53</td>
+            <td>7m</td>
+            <td>$40,232</td>
+            <td>$38,286</td>
+            <td class="loss">-5%</td>
+            <td>9812m</td>
+            <td>429</td>
+            <td class="loss">$-6.81</td>
+            <td class="loss">-3.4%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Neurosama</td>
+            <td class="ca-cell" onclick="copyCA('5FK2bfAmNDtEG57GgmbodU99XPX47HrmuvT5x3LDpump')">5FK2bf...pump</td>
+            <td>01/05 03:29</td>
+            <td>01/05 03:46</td>
+            <td>17m</td>
+            <td>$581,498</td>
+            <td>$588,615</td>
+            <td class="profit">+1%</td>
+            <td>16632m</td>
+            <td>2012</td>
+            <td class="loss">$-6.93</td>
+            <td class="loss">-3.4%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>SATOSHI</td>
+            <td class="ca-cell" onclick="copyCA('Edzw1KGP22SVfP9seSEiXgtgFSbECLemorE2iABtpump')">Edzw1K...pump</td>
+            <td>01/05 02:26</td>
+            <td>01/05 02:57</td>
+            <td>31m</td>
+            <td>$13,091</td>
+            <td>$10,786</td>
+            <td class="loss">-18%</td>
+            <td>670m</td>
+            <td>268</td>
+            <td class="loss">$-7.64</td>
+            <td class="loss">-3.8%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>FYC</td>
+            <td class="ca-cell" onclick="copyCA('EnPANkfatLeou1A7785qYREghWiGx6Xxh4TJnn43pump')">EnPANk...pump</td>
+            <td>01/05 01:06</td>
+            <td>01/05 01:11</td>
+            <td>5m</td>
+            <td>$31,577</td>
+            <td>$29,242</td>
+            <td class="loss">-7%</td>
+            <td>402m</td>
+            <td>374</td>
+            <td class="loss">$-8.05</td>
+            <td class="loss">-4.0%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>FYC</td>
+            <td class="ca-cell" onclick="copyCA('EnPANkfatLeou1A7785qYREghWiGx6Xxh4TJnn43pump')">EnPANk...pump</td>
+            <td>01/05 02:29</td>
+            <td>01/05 03:10</td>
+            <td>40m</td>
+            <td>$14,053</td>
+            <td>$12,776</td>
+            <td class="loss">-9%</td>
+            <td>485m</td>
+            <td>283</td>
+            <td class="loss">$-8.32</td>
+            <td class="loss">-4.1%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Neurosama</td>
+            <td class="ca-cell" onclick="copyCA('5FK2bfAmNDtEG57GgmbodU99XPX47HrmuvT5x3LDpump')">5FK2bf...pump</td>
+            <td>01/05 04:52</td>
+            <td>01/05 04:57</td>
+            <td>5m</td>
+            <td>$770,575</td>
+            <td>$734,027</td>
+            <td class="loss">-5%</td>
+            <td>16715m</td>
+            <td>2076</td>
+            <td class="loss">$-8.63</td>
+            <td class="loss">-4.3%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>k8o5</td>
+            <td class="ca-cell" onclick="copyCA('3FkfFXtMDVkKJ6SAouMSK4qYFmErYxSnAUx6vP52pump')">3FkfFX...pump</td>
+            <td>01/05 00:22</td>
+            <td>01/05 00:29</td>
+            <td>7m</td>
+            <td>$47,877</td>
+            <td>$45,973</td>
+            <td class="loss">-4%</td>
+            <td>1684m</td>
+            <td>261</td>
+            <td class="loss">$-8.76</td>
+            <td class="loss">-4.3%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>OIL</td>
+            <td class="ca-cell" onclick="copyCA('84icNJphfArrmyxreWozrbv8b1WrizjYY7f98FGtpump')">84icNJ...pump</td>
+            <td>01/05 09:02</td>
+            <td>01/05 09:09</td>
+            <td>7m</td>
+            <td>$24,504</td>
+            <td>$21,513</td>
+            <td class="loss">-12%</td>
+            <td>26m</td>
+            <td>435</td>
+            <td class="loss">$-9.83</td>
+            <td class="loss">-4.9%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Asgore</td>
+            <td class="ca-cell" onclick="copyCA('9SX1SbxTsPqDhzhYDcrN2EcYYTL63wQHTSB7HTYUpump')">9SX1Sb...pump</td>
+            <td>01/05 06:55</td>
+            <td>01/05 09:07</td>
+            <td>133m</td>
+            <td>$6,647</td>
+            <td>$6,165</td>
+            <td class="loss">-7%</td>
+            <td>24876m</td>
+            <td>171</td>
+            <td class="loss">$-9.95</td>
+            <td class="loss">-4.9%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>bulk</td>
+            <td class="ca-cell" onclick="copyCA('F4TJfiMVi7zFGRJj4FVC1Zuj7fdCo6skKa4SnAU4pump')">F4TJfi...pump</td>
+            <td>01/05 03:41</td>
+            <td>01/05 04:38</td>
+            <td>57m</td>
+            <td>$125,995</td>
+            <td>$118,025</td>
+            <td class="loss">-6%</td>
+            <td>59064m</td>
+            <td>235</td>
+            <td class="loss">$-10.03</td>
+            <td class="loss">-5.0%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>FYC</td>
+            <td class="ca-cell" onclick="copyCA('EnPANkfatLeou1A7785qYREghWiGx6Xxh4TJnn43pump')">EnPANk...pump</td>
+            <td>01/05 03:36</td>
+            <td>01/05 03:59</td>
+            <td>24m</td>
+            <td>$11,857</td>
+            <td>$11,027</td>
+            <td class="loss">-7%</td>
+            <td>552m</td>
+            <td>247</td>
+            <td class="loss">$-10.09</td>
+            <td class="loss">-5.0%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>DINO</td>
+            <td class="ca-cell" onclick="copyCA('85sG3Z6N1BQkm7A8vBWnN2RJLNVnnC1kwP7LZyzWpump')">85sG3Z...pump</td>
+            <td>01/05 02:24</td>
+            <td>01/05 04:37</td>
+            <td>133m</td>
+            <td>$5,700</td>
+            <td>$5,281</td>
+            <td class="loss">-7%</td>
+            <td>7838m</td>
+            <td>227</td>
+            <td class="loss">$-10.36</td>
+            <td class="loss">-5.1%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>GREAT</td>
+            <td class="ca-cell" onclick="copyCA('4fBTvktD3uBp74sGQQB2WFjRnSfayHbWDfPoxjWEpump')">4fBTvk...pump</td>
+            <td>01/05 05:59</td>
+            <td>01/05 07:03</td>
+            <td>64m</td>
+            <td>$50,890</td>
+            <td>$64,523</td>
+            <td class="profit">+27%</td>
+            <td>123m</td>
+            <td>627</td>
+            <td class="loss">$-10.52</td>
+            <td class="loss">-5.2%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Mia</td>
+            <td class="ca-cell" onclick="copyCA('DhHFXFYWiRHV3yZHGUsEd3GPqLmwUCjAwX1mVAubpump')">DhHFXF...pump</td>
+            <td>01/05 05:06</td>
+            <td>01/05 05:15</td>
+            <td>9m</td>
+            <td>$19,561</td>
+            <td>$18,189</td>
+            <td class="loss">-7%</td>
+            <td>149m</td>
+            <td>220</td>
+            <td class="loss">$-10.88</td>
+            <td class="loss">-5.4%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>glegle</td>
+            <td class="ca-cell" onclick="copyCA('D12fZ1v9WK3VhpLGejb99GT6MzwPjGWLhjN8upQmpump')">D12fZ1...pump</td>
+            <td>01/05 05:40</td>
+            <td>01/05 05:52</td>
+            <td>12m</td>
+            <td>N/A</td>
+            <td>$213,202</td>
+            <td class="loss">+0%</td>
+            <td>0m</td>
+            <td>0</td>
+            <td class="loss">$-11.07</td>
+            <td class="loss">-5.5%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>MULTI</td>
+            <td class="ca-cell" onclick="copyCA('2CUzSZWnSLwuUQea73M7GFDcsmrzKHZaRfuutk9Cpump')">2CUzSZ...pump</td>
+            <td>01/05 06:18</td>
+            <td>01/05 08:31</td>
+            <td>133m</td>
+            <td>$53,900</td>
+            <td>$49,707</td>
+            <td class="loss">-8%</td>
+            <td>11440m</td>
+            <td>252</td>
+            <td class="loss">$-12.04</td>
+            <td class="loss">-5.9%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>SATOSHI</td>
+            <td class="ca-cell" onclick="copyCA('Edzw1KGP22SVfP9seSEiXgtgFSbECLemorE2iABtpump')">Edzw1K...pump</td>
+            <td>01/05 00:51</td>
+            <td>01/05 01:05</td>
+            <td>14m</td>
+            <td>$9,893</td>
+            <td>$8,995</td>
+            <td class="loss">-9%</td>
+            <td>575m</td>
+            <td>264</td>
+            <td class="loss">$-12.17</td>
+            <td class="loss">-6.0%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>opiumbird</td>
+            <td class="ca-cell" onclick="copyCA('BY33Dwkg5rrZTTfp5uasyWti2o5ZDset4ejySAfUpump')">BY33Dw...pump</td>
+            <td>01/04 23:37</td>
+            <td>01/05 00:17</td>
+            <td>40m</td>
+            <td>$50,031</td>
+            <td>$46,307</td>
+            <td class="loss">-7%</td>
+            <td>6958m</td>
+            <td>549</td>
+            <td class="loss">$-12.21</td>
+            <td class="loss">-6.0%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>BOWL</td>
+            <td class="ca-cell" onclick="copyCA('86PtAo1z8th9tgv1BhgLiyuE91tWokUXhBCc5aLGpump')">86PtAo...pump</td>
+            <td>01/05 02:26</td>
+            <td>01/05 02:31</td>
+            <td>5m</td>
+            <td>$26,278</td>
+            <td>$24,978</td>
+            <td class="loss">-5%</td>
+            <td>83m</td>
+            <td>370</td>
+            <td class="loss">$-12.22</td>
+            <td class="loss">-6.0%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>glegle</td>
+            <td class="ca-cell" onclick="copyCA('D12fZ1v9WK3VhpLGejb99GT6MzwPjGWLhjN8upQmpump')">D12fZ1...pump</td>
+            <td>01/05 06:58</td>
+            <td>01/05 07:10</td>
+            <td>12m</td>
+            <td>$124,910</td>
+            <td>$106,382</td>
+            <td class="loss">-15%</td>
+            <td>195m</td>
+            <td>966</td>
+            <td class="loss">$-12.85</td>
+            <td class="loss">-6.3%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>LIZARD</td>
+            <td class="ca-cell" onclick="copyCA('GfqYXdfMK6oTrX2iGNFqpvVrD3dHFcfHRjFe7Ep2pump')">GfqYXd...pump</td>
+            <td>01/05 03:15</td>
+            <td>01/05 05:28</td>
+            <td>133m</td>
+            <td>$5,059</td>
+            <td>$4,621</td>
+            <td class="loss">-9%</td>
+            <td>2627m</td>
+            <td>269</td>
+            <td class="loss">$-13.03</td>
+            <td class="loss">-6.4%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>SANTA</td>
+            <td class="ca-cell" onclick="copyCA('99dkd8uWbAPF4yjKBU42mxd8BP9bJMybuGkyb6Hapump')">99dkd8...pump</td>
+            <td>01/05 01:50</td>
+            <td>01/05 01:55</td>
+            <td>5m</td>
+            <td>$10,623</td>
+            <td>$9,717</td>
+            <td class="loss">-9%</td>
+            <td>49552m</td>
+            <td>496</td>
+            <td class="loss">$-13.14</td>
+            <td class="loss">-6.5%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>SOLBISCUIT</td>
+            <td class="ca-cell" onclick="copyCA('J3mTHLJ3GMcz9ycfvUji5HzeuTvmUQjQSdzChsS5pump')">J3mTHL...pump</td>
+            <td>01/05 02:03</td>
+            <td>01/05 02:34</td>
+            <td>31m</td>
+            <td>$39,206</td>
+            <td>$35,875</td>
+            <td class="loss">-8%</td>
+            <td>6296m</td>
+            <td>282</td>
+            <td class="loss">$-13.17</td>
+            <td class="loss">-6.5%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>maxxing</td>
+            <td class="ca-cell" onclick="copyCA('32CdQdBUxbCsLy5AUHWmyidfwhgGUr9N573NBUrDpump')">32CdQd...pump</td>
+            <td>01/05 06:15</td>
+            <td>01/05 06:36</td>
+            <td>21m</td>
+            <td>$383,500</td>
+            <td>$344,705</td>
+            <td class="loss">-10%</td>
+            <td>49267m</td>
+            <td>904</td>
+            <td class="loss">$-15.85</td>
+            <td class="loss">-7.8%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Machi</td>
+            <td class="ca-cell" onclick="copyCA('6uBcfg5xWzuT5J9SaUbBp2dHNKg7WjwW8XoE7xNppump')">6uBcfg...pump</td>
+            <td>01/05 06:04</td>
+            <td>01/05 07:01</td>
+            <td>57m</td>
+            <td>$23,602</td>
+            <td>$21,104</td>
+            <td class="loss">-11%</td>
+            <td>11089m</td>
+            <td>251</td>
+            <td class="loss">$-16.02</td>
+            <td class="loss">-7.9%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>chillwhale</td>
+            <td class="ca-cell" onclick="copyCA('GTdjYj3RRJJ1MLg819RssEDQzKk2d2EafA4iN9Mypump')">GTdjYj...pump</td>
+            <td>01/05 05:43</td>
+            <td>01/05 07:56</td>
+            <td>133m</td>
+            <td>$9,640</td>
+            <td>$8,677</td>
+            <td class="loss">-10%</td>
+            <td>15460m</td>
+            <td>138</td>
+            <td class="loss">$-16.20</td>
+            <td class="loss">-8.0%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Fido</td>
+            <td class="ca-cell" onclick="copyCA('CtZDuSwo7pHpKvoQnNj93azxAH9F3SbcBsVqNrZhpump')">CtZDuS...pump</td>
+            <td>01/05 05:31</td>
+            <td>01/05 07:44</td>
+            <td>133m</td>
+            <td>$8,843</td>
+            <td>$7,919</td>
+            <td class="loss">-10%</td>
+            <td>4852m</td>
+            <td>157</td>
+            <td class="loss">$-16.85</td>
+            <td class="loss">-8.3%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Mia</td>
+            <td class="ca-cell" onclick="copyCA('DhHFXFYWiRHV3yZHGUsEd3GPqLmwUCjAwX1mVAubpump')">DhHFXF...pump</td>
+            <td>01/05 07:16</td>
+            <td>01/05 07:31</td>
+            <td>14m</td>
+            <td>$15,466</td>
+            <td>$13,563</td>
+            <td class="loss">-12%</td>
+            <td>280m</td>
+            <td>196</td>
+            <td class="loss">$-17.78</td>
+            <td class="loss">-8.8%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>YETI</td>
+            <td class="ca-cell" onclick="copyCA('DR9fWuj3XRFyNzxk1rvkwMMYA2WHj448HgVJduQLpump')">DR9fWu...pump</td>
+            <td>01/05 06:32</td>
+            <td>01/05 08:45</td>
+            <td>133m</td>
+            <td>$27,541</td>
+            <td>$24,581</td>
+            <td class="loss">-11%</td>
+            <td>21152m</td>
+            <td>1413</td>
+            <td class="loss">$-17.93</td>
+            <td class="loss">-8.9%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>COOLDUDE</td>
+            <td class="ca-cell" onclick="copyCA('F2A6xq4v1UHinN3HqjYaLY38cX6gezC4hPcyuXGxpump')">F2A6xq...pump</td>
+            <td>01/04 23:52</td>
+            <td>01/05 01:00</td>
+            <td>69m</td>
+            <td>$9,601</td>
+            <td>$8,509</td>
+            <td class="loss">-11%</td>
+            <td>7660m</td>
+            <td>224</td>
+            <td class="loss">$-18.04</td>
+            <td class="loss">-8.9%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Yasuko</td>
+            <td class="ca-cell" onclick="copyCA('7PBVy5jeegecDaYgxfPoryGkYFioGCa99GgY4ggTpump')">7PBVy5...pump</td>
+            <td>01/05 08:48</td>
+            <td>01/05 08:55</td>
+            <td>7m</td>
+            <td>$6,402</td>
+            <td>$5,547</td>
+            <td class="loss">-13%</td>
+            <td>8755m</td>
+            <td>98</td>
+            <td class="loss">$-18.43</td>
+            <td class="loss">-9.1%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>gm</td>
+            <td class="ca-cell" onclick="copyCA('9RaBDMwL2hcmah5yzXjBLiiYxHiBbd2jSEH3q6KCpump')">9RaBDM...pump</td>
+            <td>01/05 06:24</td>
+            <td>01/05 08:36</td>
+            <td>133m</td>
+            <td>$1,004,102</td>
+            <td>$881,540</td>
+            <td class="loss">-12%</td>
+            <td>14612m</td>
+            <td>791</td>
+            <td class="loss">$-19.01</td>
+            <td class="loss">-9.4%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>TGOTCHI</td>
+            <td class="ca-cell" onclick="copyCA('B29jeK32ktUUWUqJbEjH9ghed4yUQoqGWCiwkbr5pump')">B29jeK...pump</td>
+            <td>01/05 07:49</td>
+            <td>01/05 07:54</td>
+            <td>5m</td>
+            <td>$141,871</td>
+            <td>$135,526</td>
+            <td class="loss">-4%</td>
+            <td>26m</td>
+            <td>934</td>
+            <td class="loss">$-19.98</td>
+            <td class="loss">-9.9%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Pika</td>
+            <td class="ca-cell" onclick="copyCA('91tUAAfeGETMkPiNQF9ecT8MzCJASc3p5ZcqVF5Apump')">91tUAA...pump</td>
+            <td>01/05 02:12</td>
+            <td>01/05 04:25</td>
+            <td>133m</td>
+            <td>N/A</td>
+            <td>$15,177</td>
+            <td class="loss">+0%</td>
+            <td>0m</td>
+            <td>0</td>
+            <td class="loss">$-20.88</td>
+            <td class="loss">-10.3%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>GAPE</td>
+            <td class="ca-cell" onclick="copyCA('Ha7qJnutwXf92jnVckvtKjC9s4R12UXYh4qUWo5Rpump')">Ha7qJn...pump</td>
+            <td>01/05 02:45</td>
+            <td>01/05 04:58</td>
+            <td>133m</td>
+            <td>$14,576</td>
+            <td>$12,705</td>
+            <td class="loss">-13%</td>
+            <td>4900m</td>
+            <td>155</td>
+            <td class="loss">$-21.37</td>
+            <td class="loss">-10.6%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Fido</td>
+            <td class="ca-cell" onclick="copyCA('CtZDuSwo7pHpKvoQnNj93azxAH9F3SbcBsVqNrZhpump')">CtZDuS...pump</td>
+            <td>01/05 03:51</td>
+            <td>01/05 03:56</td>
+            <td>5m</td>
+            <td>$11,147</td>
+            <td>$9,711</td>
+            <td class="loss">-13%</td>
+            <td>4753m</td>
+            <td>156</td>
+            <td class="loss">$-22.49</td>
+            <td class="loss">-11.1%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>BOWL</td>
+            <td class="ca-cell" onclick="copyCA('86PtAo1z8th9tgv1BhgLiyuE91tWokUXhBCc5aLGpump')">86PtAo...pump</td>
+            <td>01/05 03:19</td>
+            <td>01/05 03:28</td>
+            <td>9m</td>
+            <td>$19,677</td>
+            <td>$17,127</td>
+            <td class="loss">-13%</td>
+            <td>136m</td>
+            <td>318</td>
+            <td class="loss">$-23.26</td>
+            <td class="loss">-11.5%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>learing</td>
+            <td class="ca-cell" onclick="copyCA('3kC6gheQ5fxK8iKWWDHeomHU5Z6U2dUWfqEK6dpLpump')">3kC6gh...pump</td>
+            <td>01/05 01:38</td>
+            <td>01/05 03:51</td>
+            <td>133m</td>
+            <td>$243,020</td>
+            <td>$214,180</td>
+            <td class="loss">-12%</td>
+            <td>11625m</td>
+            <td>3948</td>
+            <td class="loss">$-23.59</td>
+            <td class="loss">-11.6%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Bloomer</td>
+            <td class="ca-cell" onclick="copyCA('31rCeWLRsWRNn6NtxGAUFRE1wcNK3aAxxC9cSToMpump')">31rCeW...pump</td>
+            <td>01/05 05:40</td>
+            <td>01/05 05:47</td>
+            <td>7m</td>
+            <td>$27,472</td>
+            <td>$25,215</td>
+            <td class="loss">-8%</td>
+            <td>1300m</td>
+            <td>363</td>
+            <td class="loss">$-23.72</td>
+            <td class="loss">-11.7%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>json</td>
+            <td class="ca-cell" onclick="copyCA('DP97WVT3RaQBZS2nYfnq99agzqP3czkS8MxEk4gFpump')">DP97WV...pump</td>
+            <td>01/05 00:42</td>
+            <td>01/05 01:01</td>
+            <td>19m</td>
+            <td>$70,887</td>
+            <td>$31,452</td>
+            <td class="loss">-56%</td>
+            <td>26m</td>
+            <td>859</td>
+            <td class="loss">$-47.61</td>
+            <td class="loss">-11.8%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>meme</td>
+            <td class="ca-cell" onclick="copyCA('3mRdAwMrgikR5Qnn2TLwjfZzcNfBA2tvv2nv4GhDpump')">3mRdAw...pump</td>
+            <td>01/05 00:33</td>
+            <td>01/05 01:06</td>
+            <td>33m</td>
+            <td>$35,456</td>
+            <td>$29,439</td>
+            <td class="loss">-17%</td>
+            <td>1080m</td>
+            <td>414</td>
+            <td class="loss">$-48.14</td>
+            <td class="loss">-11.9%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>JEJE</td>
+            <td class="ca-cell" onclick="copyCA('6ZaQ5yKKbUbNpocw9XaTQUzvsucTcDekofsqAvFRpump')">6ZaQ5y...pump</td>
+            <td>01/05 00:50</td>
+            <td>01/05 01:37</td>
+            <td>48m</td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td class="loss">+0%</td>
+            <td>3093m</td>
+            <td>476</td>
+            <td class="loss">$-24.42</td>
+            <td class="loss">-12.1%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>glegle</td>
+            <td class="ca-cell" onclick="copyCA('D12fZ1v9WK3VhpLGejb99GT6MzwPjGWLhjN8upQmpump')">D12fZ1...pump</td>
+            <td>01/05 06:18</td>
+            <td>01/05 06:27</td>
+            <td>9m</td>
+            <td>$79,880</td>
+            <td>$73,363</td>
+            <td class="loss">-8%</td>
+            <td>154m</td>
+            <td>955</td>
+            <td class="loss">$-26.17</td>
+            <td class="loss">-12.9%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>LOU</td>
+            <td class="ca-cell" onclick="copyCA('DPcBM6ci2T4jRwGY7GC87DLShWYFaBUV31yB2bM3pump')">DPcBM6...pump</td>
+            <td>01/04 23:48</td>
+            <td>01/04 23:53</td>
+            <td>5m</td>
+            <td>$6,234</td>
+            <td>$5,316</td>
+            <td class="loss">-15%</td>
+            <td>102m</td>
+            <td>230</td>
+            <td class="loss">$-26.41</td>
+            <td class="loss">-13.0%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>NFA</td>
+            <td class="ca-cell" onclick="copyCA('AqDLQxzWdugyed5MNEcnM3XGcFVjxxxaaRK7aa7dpump')">AqDLQx...pump</td>
+            <td>01/05 09:08</td>
+            <td>01/05 09:20</td>
+            <td>12m</td>
+            <td>$10,589</td>
+            <td>$8,828</td>
+            <td class="loss">-17%</td>
+            <td>185m</td>
+            <td>251</td>
+            <td class="loss">$-28.39</td>
+            <td class="loss">-14.0%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>TAXSTRIKE</td>
+            <td class="ca-cell" onclick="copyCA('AncUQeCZ3AUma8psWJ5tthvKRgddXia6J5d6KfE5pump')">AncUQe...pump</td>
+            <td>01/05 06:44</td>
+            <td>01/05 07:08</td>
+            <td>24m</td>
+            <td>$39,184</td>
+            <td>$30,883</td>
+            <td class="loss">-21%</td>
+            <td>6272m</td>
+            <td>443</td>
+            <td class="loss">$-29.83</td>
+            <td class="loss">-14.7%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>HONK</td>
+            <td class="ca-cell" onclick="copyCA('7ubhtyNj2ABuR6q8kZeFsPkecDbey2qKjEGebEM5pump')">7ubhty...pump</td>
+            <td>01/05 03:47</td>
+            <td>01/05 06:00</td>
+            <td>133m</td>
+            <td>$3,139</td>
+            <td>$2,585</td>
+            <td class="loss">-18%</td>
+            <td>3003m</td>
+            <td>62</td>
+            <td class="loss">$-29.96</td>
+            <td class="loss">-14.8%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>GREAT</td>
+            <td class="ca-cell" onclick="copyCA('4fBTvktD3uBp74sGQQB2WFjRnSfayHbWDfPoxjWEpump')">4fBTvk...pump</td>
+            <td>01/05 06:56</td>
+            <td>01/05 07:34</td>
+            <td>38m</td>
+            <td>$68,450</td>
+            <td>$38,156</td>
+            <td class="loss">-44%</td>
+            <td>180m</td>
+            <td>663</td>
+            <td class="loss">$-32.50</td>
+            <td class="loss">-16.0%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>AHAB</td>
+            <td class="ca-cell" onclick="copyCA('6Wv4Li6toFybiJajVN3ZBTi7hF8DGbujmewqc86tpump')">6Wv4Li...pump</td>
+            <td>01/05 05:45</td>
+            <td>01/05 07:05</td>
+            <td>81m</td>
+            <td>$87,492</td>
+            <td>$72,300</td>
+            <td class="loss">-17%</td>
+            <td>7263m</td>
+            <td>111</td>
+            <td class="loss">$-32.97</td>
+            <td class="loss">-16.3%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Venezuela</td>
+            <td class="ca-cell" onclick="copyCA('CjWK9UFuTwzQBGUbqo9DdBTBL6gw3JhTZq6WhepQpump')">CjWK9U...pump</td>
+            <td>01/05 03:57</td>
+            <td>01/05 05:01</td>
+            <td>64m</td>
+            <td>$87,927</td>
+            <td>$72,237</td>
+            <td class="loss">-18%</td>
+            <td>2362m</td>
+            <td>4221</td>
+            <td class="loss">$-34.26</td>
+            <td class="loss">-16.9%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Neurosama</td>
+            <td class="ca-cell" onclick="copyCA('5FK2bfAmNDtEG57GgmbodU99XPX47HrmuvT5x3LDpump')">5FK2bf...pump</td>
+            <td>01/05 02:37</td>
+            <td>01/05 02:46</td>
+            <td>9m</td>
+            <td>$912,987</td>
+            <td>$780,894</td>
+            <td class="loss">-14%</td>
+            <td>16580m</td>
+            <td>1931</td>
+            <td class="loss">$-34.66</td>
+            <td class="loss">-17.1%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>meme</td>
+            <td class="ca-cell" onclick="copyCA('85ymfLLfeyYA9wV1PorpLBW1pprWfPgnm3cMEx5ppump')">85ymfL...pump</td>
+            <td>01/05 04:49</td>
+            <td>01/05 05:35</td>
+            <td>45m</td>
+            <td>$599,268</td>
+            <td>$486,537</td>
+            <td class="loss">-19%</td>
+            <td>1459m</td>
+            <td>2810</td>
+            <td class="loss">$-34.84</td>
+            <td class="loss">-17.2%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>LAUNCHLAB</td>
+            <td class="ca-cell" onclick="copyCA('5wT9K2qfSGgfU8piHA5an51YBE5wZUNzczH3ipyYpump')">5wT9K2...pump</td>
+            <td>01/05 03:51</td>
+            <td>01/05 04:48</td>
+            <td>57m</td>
+            <td>$122,709</td>
+            <td>$99,890</td>
+            <td class="loss">-19%</td>
+            <td>524m</td>
+            <td>968</td>
+            <td class="loss">$-35.99</td>
+            <td class="loss">-17.8%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>SLOP</td>
+            <td class="ca-cell" onclick="copyCA('A8YFC9X61bz9SCbmLkccitqM7mXqqHKN2hBZx1Y3pump')">A8YFC9...pump</td>
+            <td>01/05 01:09</td>
+            <td>01/05 03:22</td>
+            <td>133m</td>
+            <td>$12,641</td>
+            <td>$10,052</td>
+            <td class="loss">-20%</td>
+            <td>29199m</td>
+            <td>1197</td>
+            <td class="loss">$-37.95</td>
+            <td class="loss">-18.7%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Mia</td>
+            <td class="ca-cell" onclick="copyCA('DhHFXFYWiRHV3yZHGUsEd3GPqLmwUCjAwX1mVAubpump')">DhHFXF...pump</td>
+            <td>01/05 05:23</td>
+            <td>01/05 06:03</td>
+            <td>40m</td>
+            <td>$11,020</td>
+            <td>$8,747</td>
+            <td class="loss">-21%</td>
+            <td>166m</td>
+            <td>213</td>
+            <td class="loss">$-38.16</td>
+            <td class="loss">-18.8%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>you</td>
+            <td class="ca-cell" onclick="copyCA('BvkPHKx2QKMbWgo1gT2R9FemF1BvYhv2ufcmeMydrciu')">BvkPHK...rciu</td>
+            <td>01/05 02:56</td>
+            <td>01/05 03:22</td>
+            <td>26m</td>
+            <td>$73,830</td>
+            <td>$58,553</td>
+            <td class="loss">-21%</td>
+            <td>10002m</td>
+            <td>486</td>
+            <td class="loss">$-38.89</td>
+            <td class="loss">-19.2%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>INUF</td>
+            <td class="ca-cell" onclick="copyCA('5885ru69zduER1X1AfzVbKVZxJhH67XfAYkRPKWJpump')">5885ru...pump</td>
+            <td>01/05 01:27</td>
+            <td>01/05 01:29</td>
+            <td>2m</td>
+            <td>$58,732</td>
+            <td>$49,047</td>
+            <td class="loss">-16%</td>
+            <td>31m</td>
+            <td>530</td>
+            <td class="loss">$-40.12</td>
+            <td class="loss">-19.8%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>USD0</td>
+            <td class="ca-cell" onclick="copyCA('3FLRqdMrk9ARFosNejqEKMveum6hWhNMqZysAqKcTq2q')">3FLRqd...Tq2q</td>
+            <td>01/05 06:07</td>
+            <td>01/05 06:49</td>
+            <td>43m</td>
+            <td>$11,059</td>
+            <td>$8,638</td>
+            <td class="loss">-22%</td>
+            <td>2607m</td>
+            <td>149</td>
+            <td class="loss">$-40.36</td>
+            <td class="loss">-19.9%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>BOWL</td>
+            <td class="ca-cell" onclick="copyCA('86PtAo1z8th9tgv1BhgLiyuE91tWokUXhBCc5aLGpump')">86PtAo...pump</td>
+            <td>01/05 01:39</td>
+            <td>01/05 01:53</td>
+            <td>14m</td>
+            <td>$44,789</td>
+            <td>$36,428</td>
+            <td class="loss">-19%</td>
+            <td>36m</td>
+            <td>352</td>
+            <td class="loss">$-41.62</td>
+            <td class="loss">-20.6%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>GOYSLOP</td>
+            <td class="ca-cell" onclick="copyCA('3fUhYppEMgvULCfiMu2FNcZzRvp4pGXiMWrX8t8Rpump')">3fUhYp...pump</td>
+            <td>01/05 02:54</td>
+            <td>01/05 05:07</td>
+            <td>133m</td>
+            <td>$46,318</td>
+            <td>$43,166</td>
+            <td class="loss">-7%</td>
+            <td>36027m</td>
+            <td>249</td>
+            <td class="loss">$-41.73</td>
+            <td class="loss">-20.6%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>HAMM</td>
+            <td class="ca-cell" onclick="copyCA('8uCdddfxYNqxYPQGEzqrSmpKkVyMHnKvFTahp4Yopump')">8uCddd...pump</td>
+            <td>01/05 02:59</td>
+            <td>01/05 05:12</td>
+            <td>133m</td>
+            <td>$134,974</td>
+            <td>$106,254</td>
+            <td class="loss">-21%</td>
+            <td>47386m</td>
+            <td>503</td>
+            <td class="loss">$-42.15</td>
+            <td class="loss">-20.8%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>BOWL</td>
+            <td class="ca-cell" onclick="copyCA('GGjSyw7a11ZXvVTt163NYUv3HMfv5iscgY8Z3Wyhpump')">GGjSyw...pump</td>
+            <td>01/05 02:28</td>
+            <td>01/05 02:44</td>
+            <td>17m</td>
+            <td>$38,888</td>
+            <td>$30,316</td>
+            <td class="loss">-22%</td>
+            <td>119m</td>
+            <td>346</td>
+            <td class="loss">$-42.68</td>
+            <td class="loss">-21.1%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>BabyAGI</td>
+            <td class="ca-cell" onclick="copyCA('D2eyhjXSUFG7YrcJtXzKBd1ajVoAordApG1s27vBpump')">D2eyhj...pump</td>
+            <td>01/05 03:59</td>
+            <td>01/05 05:25</td>
+            <td>86m</td>
+            <td>$17,536</td>
+            <td>$13,546</td>
+            <td class="loss">-23%</td>
+            <td>37692m</td>
+            <td>180</td>
+            <td class="loss">$-43.06</td>
+            <td class="loss">-21.3%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Bloomer</td>
+            <td class="ca-cell" onclick="copyCA('31rCeWLRsWRNn6NtxGAUFRE1wcNK3aAxxC9cSToMpump')">31rCeW...pump</td>
+            <td>01/05 03:22</td>
+            <td>01/05 05:35</td>
+            <td>133m</td>
+            <td>$48,291</td>
+            <td>$36,954</td>
+            <td class="loss">-23%</td>
+            <td>1162m</td>
+            <td>393</td>
+            <td class="loss">$-44.80</td>
+            <td class="loss">-22.1%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>DINO</td>
+            <td class="ca-cell" onclick="copyCA('85sG3Z6N1BQkm7A8vBWnN2RJLNVnnC1kwP7LZyzWpump')">85sG3Z...pump</td>
+            <td>01/04 23:52</td>
+            <td>01/05 00:47</td>
+            <td>54m</td>
+            <td>$8,436</td>
+            <td>$6,419</td>
+            <td class="loss">-24%</td>
+            <td>7686m</td>
+            <td>243</td>
+            <td class="loss">$-45.31</td>
+            <td class="loss">-22.4%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>r0ko</td>
+            <td class="ca-cell" onclick="copyCA('BpW5jkzNXeCkD9Vux3C8zyusKuHWNnqNcDkDYpgwpump')">BpW5jk...pump</td>
+            <td>01/05 01:38</td>
+            <td>01/05 01:55</td>
+            <td>17m</td>
+            <td>$54,748</td>
+            <td>$45,801</td>
+            <td class="loss">-16%</td>
+            <td>2740m</td>
+            <td>347</td>
+            <td class="loss">$-45.60</td>
+            <td class="loss">-22.5%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>GRANNY</td>
+            <td class="ca-cell" onclick="copyCA('4zL98Nncs8mHn3Aaw8naCdusLbRStKoxcfHqA4Wwpump')">4zL98N...pump</td>
+            <td>01/05 05:10</td>
+            <td>01/05 07:06</td>
+            <td>116m</td>
+            <td>$17,039</td>
+            <td>$11,594</td>
+            <td class="loss">-32%</td>
+            <td>4513m</td>
+            <td>234</td>
+            <td class="loss">$-92.43</td>
+            <td class="loss">-22.8%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>鲸</td>
+            <td class="ca-cell" onclick="copyCA('FSUHWVuFk66cQi1G7wjz31j5WMAbEkf2w71rHVmLpump')">FSUHWV...pump</td>
+            <td>01/05 06:06</td>
+            <td>01/05 08:19</td>
+            <td>133m</td>
+            <td>$9,767</td>
+            <td>$7,310</td>
+            <td class="loss">-25%</td>
+            <td>15081m</td>
+            <td>257</td>
+            <td class="loss">$-48.17</td>
+            <td class="loss">-23.8%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>json</td>
+            <td class="ca-cell" onclick="copyCA('DP97WVT3RaQBZS2nYfnq99agzqP3czkS8MxEk4gFpump')">DP97WV...pump</td>
+            <td>01/05 07:12</td>
+            <td>01/05 07:54</td>
+            <td>43m</td>
+            <td>$42,911</td>
+            <td>$27,709</td>
+            <td class="loss">-35%</td>
+            <td>416m</td>
+            <td>574</td>
+            <td class="loss">$-48.64</td>
+            <td class="loss">-24.0%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>glegle</td>
+            <td class="ca-cell" onclick="copyCA('D12fZ1v9WK3VhpLGejb99GT6MzwPjGWLhjN8upQmpump')">D12fZ1...pump</td>
+            <td>01/05 07:29</td>
+            <td>01/05 07:50</td>
+            <td>21m</td>
+            <td>$86,034</td>
+            <td>$71,679</td>
+            <td class="loss">-17%</td>
+            <td>226m</td>
+            <td>921</td>
+            <td class="loss">$-49.72</td>
+            <td class="loss">-24.6%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Oilcoin</td>
+            <td class="ca-cell" onclick="copyCA('RN4LQdSmaYkCKNnrN8eFjGZ9tUUPN6nriEdpCF74oiL')">RN4LQd...4oiL</td>
+            <td>01/05 02:40</td>
+            <td>01/05 04:53</td>
+            <td>133m</td>
+            <td>$13,956</td>
+            <td>$10,258</td>
+            <td class="loss">-26%</td>
+            <td>964m</td>
+            <td>267</td>
+            <td class="loss">$-50.95</td>
+            <td class="loss">-25.2%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Mia</td>
+            <td class="ca-cell" onclick="copyCA('DhHFXFYWiRHV3yZHGUsEd3GPqLmwUCjAwX1mVAubpump')">DhHFXF...pump</td>
+            <td>01/05 06:48</td>
+            <td>01/05 07:09</td>
+            <td>21m</td>
+            <td>$27,443</td>
+            <td>$22,056</td>
+            <td class="loss">-20%</td>
+            <td>252m</td>
+            <td>206</td>
+            <td class="loss">$-52.58</td>
+            <td class="loss">-26.0%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Mia</td>
+            <td class="ca-cell" onclick="copyCA('FyPDfX92B4uEk4zZouy96d1Kk1LgnCznBpzAFSsZpump')">FyPDfX...pump</td>
+            <td>01/05 04:49</td>
+            <td>01/05 05:05</td>
+            <td>17m</td>
+            <td>$378,877</td>
+            <td>$297,979</td>
+            <td class="loss">-21%</td>
+            <td>940m</td>
+            <td>1067</td>
+            <td class="loss">$-53.08</td>
+            <td class="loss">-26.2%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>GrayWhale</td>
+            <td class="ca-cell" onclick="copyCA('5AJELeDo5ZYwMbt6kRPp6hZ2xrcomwd7LuPXR8wmpump')">5AJELe...pump</td>
+            <td>01/05 05:45</td>
+            <td>01/05 07:58</td>
+            <td>133m</td>
+            <td>N/A</td>
+            <td>$4,982</td>
+            <td class="loss">+0%</td>
+            <td>0m</td>
+            <td>0</td>
+            <td class="loss">$-53.28</td>
+            <td class="loss">-26.3%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>PAD</td>
+            <td class="ca-cell" onclick="copyCA('HsZFch8viop6pL566URgdNZUKMzy1aTHFmaUM8Ubpump')">HsZFch...pump</td>
+            <td>01/05 07:14</td>
+            <td>01/05 09:27</td>
+            <td>133m</td>
+            <td>N/A</td>
+            <td>$20,331</td>
+            <td class="loss">+0%</td>
+            <td>0m</td>
+            <td>0</td>
+            <td class="loss">$-54.26</td>
+            <td class="loss">-26.8%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Oilcoin</td>
+            <td class="ca-cell" onclick="copyCA('RN4LQdSmaYkCKNnrN8eFjGZ9tUUPN6nriEdpCF74oiL')">RN4LQd...4oiL</td>
+            <td>01/05 01:48</td>
+            <td>01/05 02:00</td>
+            <td>12m</td>
+            <td>$24,213</td>
+            <td>$17,316</td>
+            <td class="loss">-28%</td>
+            <td>911m</td>
+            <td>273</td>
+            <td class="loss">$-54.40</td>
+            <td class="loss">-26.9%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>dollar</td>
+            <td class="ca-cell" onclick="copyCA('357FS9twDuFKtJ3DiVMaJCFdmi6xLAENyNricvUapump')">357FS9...pump</td>
+            <td>01/05 03:35</td>
+            <td>01/05 05:48</td>
+            <td>133m</td>
+            <td>$6,723</td>
+            <td>$4,666</td>
+            <td class="loss">-31%</td>
+            <td>979m</td>
+            <td>218</td>
+            <td class="loss">$-56.84</td>
+            <td class="loss">-28.1%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>TAXSTRIKE</td>
+            <td class="ca-cell" onclick="copyCA('AncUQeCZ3AUma8psWJ5tthvKRgddXia6J5d6KfE5pump')">AncUQe...pump</td>
+            <td>01/05 05:36</td>
+            <td>01/05 05:55</td>
+            <td>19m</td>
+            <td>$41,131</td>
+            <td>$28,177</td>
+            <td class="loss">-31%</td>
+            <td>6203m</td>
+            <td>425</td>
+            <td class="loss">$-59.37</td>
+            <td class="loss">-29.3%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>GRANNY</td>
+            <td class="ca-cell" onclick="copyCA('4zL98Nncs8mHn3Aaw8naCdusLbRStKoxcfHqA4Wwpump')">4zL98N...pump</td>
+            <td>01/05 03:49</td>
+            <td>01/05 04:29</td>
+            <td>40m</td>
+            <td>$15,642</td>
+            <td>$10,582</td>
+            <td class="loss">-32%</td>
+            <td>4432m</td>
+            <td>210</td>
+            <td class="loss">$-60.48</td>
+            <td class="loss">-29.9%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>PAD</td>
+            <td class="ca-cell" onclick="copyCA('HsZFch8viop6pL566URgdNZUKMzy1aTHFmaUM8Ubpump')">HsZFch...pump</td>
+            <td>01/05 04:54</td>
+            <td>01/05 07:07</td>
+            <td>133m</td>
+            <td>$44,745</td>
+            <td>$30,327</td>
+            <td class="loss">-32%</td>
+            <td>3255m</td>
+            <td>256</td>
+            <td class="loss">$-60.70</td>
+            <td class="loss">-30.0%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>MINE</td>
+            <td class="ca-cell" onclick="copyCA('Co7pyy84biZZiD4sS8Q8rPt8u36du7JvEQuWrFNApump')">Co7pyy...pump</td>
+            <td>01/05 00:37</td>
+            <td>01/05 00:51</td>
+            <td>14m</td>
+            <td>$4,968</td>
+            <td>$4,387</td>
+            <td class="loss">-12%</td>
+            <td>130m</td>
+            <td>302</td>
+            <td class="loss">$-61.48</td>
+            <td class="loss">-30.4%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>DOGE2</td>
+            <td class="ca-cell" onclick="copyCA('34qNuzuE1Y6KcAr9Dvn2fH8GXQjfp9w7oouWtLPK1ykp')">34qNuz...1ykp</td>
+            <td>01/05 06:59</td>
+            <td>01/05 07:11</td>
+            <td>12m</td>
+            <td>$5,977</td>
+            <td>$3,988</td>
+            <td class="loss">-33%</td>
+            <td>10343m</td>
+            <td>216</td>
+            <td class="loss">$-61.59</td>
+            <td class="loss">-30.4%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>COMMUNISM</td>
+            <td class="ca-cell" onclick="copyCA('3HQjEYDyUcGdmNkkqGxG7M5CQk9P4TSEspGWU9dRpump')">3HQjEY...pump</td>
+            <td>01/05 02:20</td>
+            <td>01/05 04:33</td>
+            <td>133m</td>
+            <td>$7,757</td>
+            <td>$5,273</td>
+            <td class="loss">-32%</td>
+            <td>687m</td>
+            <td>306</td>
+            <td class="loss">$-62.42</td>
+            <td class="loss">-30.8%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>trellis</td>
+            <td class="ca-cell" onclick="copyCA('DVYy1gdBF3J1J2a7ejDvn4sG2jsScHaVHRySKi9pump')">DVYy1g...pump</td>
+            <td>01/05 09:14</td>
+            <td>01/05 09:26</td>
+            <td>12m</td>
+            <td>$64,171</td>
+            <td>$48,074</td>
+            <td class="loss">-25%</td>
+            <td>52m</td>
+            <td>508</td>
+            <td class="loss">$-62.94</td>
+            <td class="loss">-31.1%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>BOWL</td>
+            <td class="ca-cell" onclick="copyCA('GGjSyw7a11ZXvVTt163NYUv3HMfv5iscgY8Z3Wyhpump')">GGjSyw...pump</td>
+            <td>01/05 05:31</td>
+            <td>01/05 07:43</td>
+            <td>133m</td>
+            <td>$10,907</td>
+            <td>$7,168</td>
+            <td class="loss">-34%</td>
+            <td>302m</td>
+            <td>252</td>
+            <td class="loss">$-66.11</td>
+            <td class="loss">-32.6%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>AYREY70B</td>
+            <td class="ca-cell" onclick="copyCA('BzS5DAEkG7GTJUNWfgqK2MFspfbySVcSQCQgE2xbpump')">BzS5DA...pump</td>
+            <td>01/05 01:41</td>
+            <td>01/05 03:54</td>
+            <td>133m</td>
+            <td>$4,729</td>
+            <td>$2,919</td>
+            <td class="loss">-38%</td>
+            <td>1305m</td>
+            <td>34</td>
+            <td class="loss">$-68.49</td>
+            <td class="loss">-33.8%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>TPF</td>
+            <td class="ca-cell" onclick="copyCA('4ZXiS4JiheApbEKupQdWEqGWtXPZqN5g3nSL5NKTpump')">4ZXiS4...pump</td>
+            <td>01/05 03:04</td>
+            <td>01/05 05:17</td>
+            <td>133m</td>
+            <td>$9,417</td>
+            <td>$6,090</td>
+            <td class="loss">-35%</td>
+            <td>1119m</td>
+            <td>321</td>
+            <td class="loss">$-68.81</td>
+            <td class="loss">-34.0%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>MAMA</td>
+            <td class="ca-cell" onclick="copyCA('DSB5t8TFwsdnmmuY7HC9HqBV9bnzE9VHrpRE5XNYpump')">DSB5t8...pump</td>
+            <td>01/05 01:24</td>
+            <td>01/05 02:21</td>
+            <td>57m</td>
+            <td>$93,703</td>
+            <td>$60,678</td>
+            <td class="loss">-35%</td>
+            <td>314m</td>
+            <td>600</td>
+            <td class="loss">$-70.79</td>
+            <td class="loss">-35.0%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Altcoin</td>
+            <td class="ca-cell" onclick="copyCA('6PDR3o1KGccEt3m8XfkoRvkBfjkkkwuQz5gtLxGApump')">6PDR3o...pump</td>
+            <td>01/05 03:44</td>
+            <td>01/05 05:14</td>
+            <td>90m</td>
+            <td>$477,716</td>
+            <td>$289,855</td>
+            <td class="loss">-39%</td>
+            <td>72043m</td>
+            <td>1470</td>
+            <td class="loss">$-75.23</td>
+            <td class="loss">-37.2%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>BOWL</td>
+            <td class="ca-cell" onclick="copyCA('86PtAo1z8th9tgv1BhgLiyuE91tWokUXhBCc5aLGpump')">86PtAo...pump</td>
+            <td>01/05 02:03</td>
+            <td>01/05 02:07</td>
+            <td>5m</td>
+            <td>$67,004</td>
+            <td>$43,139</td>
+            <td class="loss">-36%</td>
+            <td>60m</td>
+            <td>440</td>
+            <td class="loss">$-80.62</td>
+            <td class="loss">-39.8%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>FOID</td>
+            <td class="ca-cell" onclick="copyCA('HEjKJoVSk6552wirqJW9yz9fnvbSfKuF64aDKNoWpump')">HEjKJo...pump</td>
+            <td>01/05 02:16</td>
+            <td>01/05 03:44</td>
+            <td>88m</td>
+            <td>$24,882</td>
+            <td>$16,184</td>
+            <td class="loss">-35%</td>
+            <td>128m</td>
+            <td>292</td>
+            <td class="loss">$-80.76</td>
+            <td class="loss">-39.9%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>GleGle</td>
+            <td class="ca-cell" onclick="copyCA('C5qsCUv2wFUiX3HddbQYG81jSUShXBygngJQJ1y9pump')">C5qsCU...pump</td>
+            <td>01/05 06:19</td>
+            <td>01/05 06:57</td>
+            <td>38m</td>
+            <td>$126,418</td>
+            <td>$63,903</td>
+            <td class="loss">-49%</td>
+            <td>1006m</td>
+            <td>413</td>
+            <td class="loss">$-84.27</td>
+            <td class="loss">-41.6%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>INUF</td>
+            <td class="ca-cell" onclick="copyCA('5885ru69zduER1X1AfzVbKVZxJhH67XfAYkRPKWJpump')">5885ru...pump</td>
+            <td>01/05 02:17</td>
+            <td>01/05 02:24</td>
+            <td>7m</td>
+            <td>$16,155</td>
+            <td>$7,485</td>
+            <td class="loss">-54%</td>
+            <td>81m</td>
+            <td>454</td>
+            <td class="loss">$-86.46</td>
+            <td class="loss">-42.7%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>gm</td>
+            <td class="ca-cell" onclick="copyCA('9RaBDMwL2hcmah5yzXjBLiiYxHiBbd2jSEH3q6KCpump')">9RaBDM...pump</td>
+            <td>01/05 03:59</td>
+            <td>01/05 05:03</td>
+            <td>64m</td>
+            <td>$1,920,006</td>
+            <td>$1,084,977</td>
+            <td class="loss">-43%</td>
+            <td>14467m</td>
+            <td>772</td>
+            <td class="loss">$-87.02</td>
+            <td class="loss">-43.0%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>SENPAI</td>
+            <td class="ca-cell" onclick="copyCA('6bbW3ZufJaDkGYsQ1dqfLrchqtRQyEATA7g3Fs7tpump')">6bbW3Z...pump</td>
+            <td>01/05 03:28</td>
+            <td>01/05 03:35</td>
+            <td>7m</td>
+            <td>N/A</td>
+            <td>$26,640</td>
+            <td class="loss">+0%</td>
+            <td>0m</td>
+            <td>0</td>
+            <td class="loss">$-90.80</td>
+            <td class="loss">-44.8%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Opinion</td>
+            <td class="ca-cell" onclick="copyCA('f85m3YXHER29D7jRKgCa6bwhbhvwq2bJ2f91QXJpump')">f85m3Y...pump</td>
+            <td>01/05 04:05</td>
+            <td>01/05 06:18</td>
+            <td>133m</td>
+            <td>$29,354</td>
+            <td>$15,231</td>
+            <td class="loss">-48%</td>
+            <td>4028m</td>
+            <td>337</td>
+            <td class="loss">$-91.06</td>
+            <td class="loss">-45.0%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Mia</td>
+            <td class="ca-cell" onclick="copyCA('DhHFXFYWiRHV3yZHGUsEd3GPqLmwUCjAwX1mVAubpump')">DhHFXF...pump</td>
+            <td>01/05 03:02</td>
+            <td>01/05 03:12</td>
+            <td>10m</td>
+            <td>$142,114</td>
+            <td>$30,436</td>
+            <td class="loss">-79%</td>
+            <td>26m</td>
+            <td>502</td>
+            <td class="loss">$-95.47</td>
+            <td class="loss">-47.1%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>GPM</td>
+            <td class="ca-cell" onclick="copyCA('CQSs5ttJPeRxawNpoiTD5sDGRkhbK36WBLo3JuKwpump')">CQSs5t...pump</td>
+            <td>01/05 01:13</td>
+            <td>01/05 01:51</td>
+            <td>38m</td>
+            <td>$144,367</td>
+            <td>$69,206</td>
+            <td class="loss">-52%</td>
+            <td>38m</td>
+            <td>686</td>
+            <td class="loss">$-100.99</td>
+            <td class="loss">-49.9%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Mia</td>
+            <td class="ca-cell" onclick="copyCA('DhHFXFYWiRHV3yZHGUsEd3GPqLmwUCjAwX1mVAubpump')">DhHFXF...pump</td>
+            <td>01/05 03:38</td>
+            <td>01/05 03:57</td>
+            <td>19m</td>
+            <td>$35,728</td>
+            <td>$17,061</td>
+            <td class="loss">-52%</td>
+            <td>62m</td>
+            <td>261</td>
+            <td class="loss">$-102.51</td>
+            <td class="loss">-50.6%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>Bloomer</td>
+            <td class="ca-cell" onclick="copyCA('31rCeWLRsWRNn6NtxGAUFRE1wcNK3aAxxC9cSToMpump')">31rCeW...pump</td>
+            <td>01/05 06:09</td>
+            <td>01/05 08:17</td>
+            <td>128m</td>
+            <td>$20,402</td>
+            <td>$9,153</td>
+            <td class="loss">-55%</td>
+            <td>1328m</td>
+            <td>354</td>
+            <td class="loss">$-110.68</td>
+            <td class="loss">-54.7%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>COMMUNISM</td>
+            <td class="ca-cell" onclick="copyCA('3HQjEYDyUcGdmNkkqGxG7M5CQk9P4TSEspGWU9dRpump')">3HQjEY...pump</td>
+            <td>01/05 01:49</td>
+            <td>01/05 02:08</td>
+            <td>19m</td>
+            <td>$19,037</td>
+            <td>$6,466</td>
+            <td class="loss">-66%</td>
+            <td>656m</td>
+            <td>328</td>
+            <td class="loss">$-132.12</td>
+            <td class="loss">-65.2%</td>
+            <td>❌</td>
+        </tr>
+        <tr class="loss-row">
+            <td>GREAT</td>
+            <td class="ca-cell" onclick="copyCA('4fBTvktD3uBp74sGQQB2WFjRnSfayHbWDfPoxjWEpump')">4fBTvk...pump</td>
+            <td>01/05 04:26</td>
+            <td>01/05 05:21</td>
+            <td>55m</td>
+            <td>$290,002</td>
+            <td>$26,631</td>
+            <td class="loss">-91%</td>
+            <td>30m</td>
+            <td>677</td>
+            <td class="loss">$-337.00</td>
+            <td class="loss">-83.2%</td>
+            <td>❌</td>
+        </tr></tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="toast" id="toast">✅ CA Copied!</div>
+    <script>
+        function copyCA(ca) {
+            navigator.clipboard.writeText(ca).then(() => {
+                const toast = document.getElementById('toast');
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2000);
+            });
+        }
+    </script>
+</body>
+</html>
