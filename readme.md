@@ -430,3 +430,74 @@ BOT_CONFIG = {
     'target_hold_minutes': 144,
 }
 ```
+---
+🎯 AI THOUGHTS ON HIS EXIT STRATEGY
+Based on the data, here's what I see:
+
+P/L Distribution:
+25% break-even (-5% to +5%) - This is KEY
+25% small wins (0-10%)
+24% medium wins (10-30%)
+21% losses (various sizes)
+Only 3% big wins (30%+)
+What This Tells Me:
+He's NOT using time-based exits. Hold times vary wildly (2 min to 5+ hours).
+
+He's likely using a TRAILING STOP LOSS system:
+
+Entry: Buys token
+Sets initial stop loss at maybe -5% to -10%
+As price goes up, stop loss trails up (follows the price)
+When price drops X% from peak → auto-sell
+Evidence:
+25% break-even exits = Stop loss triggered right at entry (price never pumped)
+Many small wins with NEGATIVE 5m momentum = Price was going UP, then dropped, trailing stop caught it
+Avg 5m at winning exits: +3.7% = He's NOT selling at the peak, he's selling AFTER a small dip
+Avg 5m at losing exits: -1.2% = Stop loss triggered on downtrend
+His Probable Settings:
+TRAILING_STOP = 10-15%  (sells when price drops 10-15% from peak)
+INITIAL_STOP = -20% to -30%  (max loss before cutting)
+Why This Works:
+Lets winners run - doesn't sell at fixed TP
+Cuts losers - doesn't hold bags
+Captures most of the move - trailing stop catches 80-90% of pumps
+59.5% win rate with +4.7% avg = profitable over time
+
+---
+
+
+🔍 REVISED AI THEORY - His REAL Strategy:
+He has NO hard stop loss! He holds through massive drawdowns (-83%!).
+
+Looking at the big losers:
+
+GREAT: Held 55 min, MC dropped 290k → 27k (-91%), P/L -83%
+COMMUNISM: Held 19 min, MC dropped 19k → 6k (-66%), P/L -65%
+Bloomer: Held 356 min (6 hours!), MC dropped 54k → 9k, P/L -55%
+His actual strategy seems to be:
+
+BUYS: Based on criteria (MC, age, liquidity, etc.)
+
+HOLDS: Waits for the token to pump
+
+SELLS when:
+
+Token pumps → Takes profit (trailing stop or fixed TP)
+Token dumps hard → Eventually cuts loss (but NO hard stop loss)
+Token goes sideways → Sells at break-even after a while
+The big losses happen when:
+
+Token rugs or dumps fast
+He doesn't have auto-stop loss
+He manually exits when he realizes it's dead
+Key insight: The 25% break-even exits are probably him manually closing positions that aren't moving, NOT a stop loss triggering.
+
+His edge comes from:
+
+59.5% win rate
+Winners avg +18.7%
+Losers avg -15.8%
+Positive expectancy overall (+4.7% per trade)
+He accepts big losses as part of the game - the winners make up for them.
+
+---
